@@ -31,8 +31,8 @@ body {
   font-family: 'Noto Sans TC', sans-serif;
   background: var(--bg);
   color: var(--text);
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 17px;
+  line-height: 1.7;
 }
 
 a { color: var(--blue-mid); text-decoration: none; }
@@ -42,11 +42,25 @@ a:hover { text-decoration: underline; }
 .site-header {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  padding: 20px 24px;
+  padding: 20px 24px 16px;
   text-align: center;
 }
 .site-header .school { font-size: 13px; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 4px; }
 .site-header .title { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: 0.02em; }
+.font-controls { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px; }
+.font-ctrl-label { font-size: 12px; color: var(--text-faint); }
+.font-btn {
+  width: 32px; height: 32px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--bg); color: var(--text);
+  font-size: 16px; font-weight: 500; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Noto Sans TC', sans-serif; line-height: 1;
+  transition: background 0.1s;
+}
+.font-btn:hover { background: var(--border); }
+.font-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.font-size-display { font-size: 12px; color: var(--text-muted); min-width: 36px; text-align: center; }
 
 /* ── 版面 ── */
 .container { max-width: 980px; margin: 0 auto; padding: 28px 20px 60px; }
@@ -273,7 +287,15 @@ a:hover { text-decoration: underline; }
 <div class="container">
 
   <!-- 倒數計時 -->
-  <div class="section-heading">競賽倒數</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+    <div class="section-heading" style="margin-bottom:0">競賽倒數</div>
+    <div class="font-controls" style="margin-top:0">
+      <span class="font-ctrl-label">字體</span>
+      <button class="font-btn" id="font-down" title="縮小字體" onclick="adjustFont(-1)">A−</button>
+      <span class="font-size-display" id="font-display">17px</span>
+      <button class="font-btn" id="font-up" title="放大字體" onclick="adjustFont(1)">A+</button>
+    </div>
+  </div>
   <div class="countdown-grid">
 
     <!-- 報名截止倒數 -->
@@ -319,16 +341,29 @@ a:hover { text-decoration: underline; }
       <div class="link-card-icon">📋</div>
       <div class="link-card-label">海報組報名表</div>
       <div class="link-card-note">點此前往填寫 →</div>
+      <div style="font-size:12px;color:#C0392B;margin-top:6px;line-height:1.5;">登入竹高Gmail填寫</div>
     </a>
     <a class="link-card link-talk" href="https://docs.google.com/forms/d/e/1FAIpQLSdA_fU0Z0zlfptER0zYAtvSLwewljOVkbzOpIZqLg1kv3cIQA/viewform?usp=header" target="_blank">
       <div class="link-card-icon">🎤</div>
       <div class="link-card-label">短講組報名表</div>
       <div class="link-card-note">點此前往填寫 →</div>
+      <div style="font-size:12px;color:#C0392B;margin-top:6px;line-height:1.5;">登入竹高Gmail填寫</div>
     </a>
     <a class="link-card link-pledge" href="https://drive.google.com/file/d/1D4qI1uFzuBuVvXIzWLqL6tzrCM6uyLNV/view?usp=sharing" target="_blank">
       <div class="link-card-icon">📄</div>
-      <div class="link-card-label">切結書下載</div>
+      <div class="link-card-label">授權同意書下載</div>
       <div class="link-card-note">列印後簽名繳交 →</div>
+      <div style="font-size:12px;color:#C0392B;margin-top:6px;line-height:1.5;">一張A4雙面列印，或可至圖書館索取，注意兩面都要簽名</div>
+    </a>
+    <a class="link-card" href="#" target="_blank" style="border-top:3px solid #7B5EA7;">
+      <div class="link-card-icon">📘</div>
+      <div class="link-card-label">竹高自主學習成果競賽實施要點</div>
+      <div class="link-card-note" style="color:#7B5EA7;">點此查看 →</div>
+    </a>
+    <a class="link-card" href="https://drive.google.com/file/d/1bygHapzch8LXlwG75TH06hdkLqLdMhby/view?usp=sharing" target="_blank" style="border-top:3px solid #2E7D6E;">
+      <div class="link-card-icon">📗</div>
+      <div class="link-card-label">114-2 南投縣自主學習聯合發表實施計畫</div>
+      <div class="link-card-note" style="color:#2E7D6E;">點此查看 →</div>
     </a>
   </div>
 
@@ -381,9 +416,9 @@ a:hover { text-decoration: underline; }
       <div class="rules-section">
         <h3>注意事項</h3>
         <ul class="rules-list">
-          <li>參賽作品限未曾在校外出版、發表或獲獎，不得抄襲或頂用他人名義參賽。</li>
-          <li>所有參賽者均須簽立切結書，掃描後於作品上傳時同步繳交，並繳交<strong style="color:var(--text)">紙本至圖書館</strong>。</li>
-          <li>切結書可<a href="https://drive.google.com/file/d/1D4qI1uFzuBuVvXIzWLqL6tzrCM6uyLNV/view?usp=sharing" target="_blank">自行下載列印</a>或至圖書館索取。</li>
+          <li>參賽作品不得抄襲、模仿、改編、譯自外文、或頂用他人名義參賽，如有上述情形，經查證屬實者，將依校規懲處。</li>
+          <li>所有參賽者均須簽立授權同意書，並繳交<strong style="color:var(--text)">紙本至圖書館</strong>。</li>
+          <li>授權同意書可<a href="https://drive.google.com/file/d/1D4qI1uFzuBuVvXIzWLqL6tzrCM6uyLNV/view?usp=sharing" target="_blank">自行下載列印</a>或至圖書館索取。</li>
           <li>短講組出場順序由主辦單位抽籤後公告。</li>
           <li>如有任何疑問，請洽圖書館馮松林主任或資媒組長楊瑀婕老師（<a href="mailto:cs11203@gm.cshs.ntct.edu.tw">cs11203@gm.cshs.ntct.edu.tw</a>）。</li>
         </ul>
@@ -392,55 +427,67 @@ a:hover { text-decoration: underline; }
 
     <!-- 繳交檔案 -->
     <div id="tab-files" class="tab-content">
+
+      <!-- 海報組 -->
       <div class="rules-section">
-        <h3>海報 PDF（海報組、短講組皆須繳交）</h3>
+        <h3 style="color:var(--blue-mid)">📋 海報組須繳交</h3>
         <div class="file-list">
           <div class="file-item">
-            <span class="file-tag file-tag-both">必繳</span>
+            <span class="file-tag file-tag-poster">海報 PDF</span>
             <div class="file-desc">
               <strong>格式：</strong>A1（594 × 841 mm）、限1頁、相片解析度250dpi以上、檔案不超過10MB<br>
-              <strong>檔名：</strong>海報-所有組員姓名（中間不加空白），例：海報-王一一李二二陳三三<br>
-              <strong>海報內容須包含：</strong>標頭「114-2 南投縣高級中等學校適性學習社區自主學習聯合成果發表會」、學校名稱（國立竹山高級中學）、主題、指導教師、作者
+              <strong>檔名：</strong>海報-所有組員姓名（不加空白），例：海報-王一一李二二陳三三<br>
+              <strong>必須包含：</strong>標頭「114-2 南投縣高級中等學校適性學習社區自主學習聯合成果發表會」、學校名稱（國立竹山高級中學）、主題、指導教師、作者
+            </div>
+          </div>
+          <div class="file-item">
+            <span class="file-tag file-tag-both">授權同意書</span>
+            <div class="file-desc">
+              <strong>說明：</strong>列印成1張雙面，附件二和三均須簽名，一人一張，繳交<strong>紙本至圖書館</strong>。<br>
+              <a href="https://drive.google.com/file/d/1D4qI1uFzuBuVvXIzWLqL6tzrCM6uyLNV/view?usp=sharing" target="_blank">下載授權同意書</a>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- 短講組 -->
       <div class="rules-section">
-        <h3>自主學習計畫 PDF（海報組、短講組皆須繳交）</h3>
+        <h3 style="color:var(--green-mid)">🎤 短講組須繳交</h3>
         <div class="file-list">
           <div class="file-item">
-            <span class="file-tag file-tag-both">必繳</span>
+            <span class="file-tag file-tag-talk">海報 PDF</span>
             <div class="file-desc">
-              <strong>檔名：</strong>計畫名稱
+              <strong>格式：</strong>A1（594 × 841 mm）、限1頁、相片解析度250dpi以上、檔案不超過10MB<br>
+              <strong>檔名：</strong>海報-所有組員姓名（不加空白），例：海報-王一一李二二陳三三<br>
+              <strong>必須包含：</strong>標頭「114-2 南投縣高級中等學校適性學習社區自主學習聯合成果發表會」、學校名稱（國立竹山高級中學）、主題、指導教師、作者
             </div>
           </div>
-        </div>
-      </div>
-      <div class="rules-section">
-        <h3>簡報檔（僅短講組須繳交）</h3>
-        <div class="file-list">
           <div class="file-item">
-            <span class="file-tag file-tag-talk">短講組</span>
+            <span class="file-tag file-tag-talk">自主學習成果 PDF</span>
             <div class="file-desc">
-              <strong>格式：</strong>PowerPoint（.pptx）或 Canva 匯出 PDF<br>
-              <strong>檔名：</strong>計畫名稱＋簡報
+              <strong>格式：</strong>A4、不限頁數、相片可壓縮、檔案不超過10MB<br>
+              <strong>檔名：</strong>計畫-所有組員姓名（不加空白），例：計畫-王一一李二二陳三三<br>
+              <strong>必須包含：</strong>標頭「114-2 南投縣高級中等學校適性學習社區自主學習聯合成果發表會」、學校名稱（國立竹山高級中學）、主題、指導教師、作者
             </div>
           </div>
-        </div>
-      </div>
-      <div class="rules-section">
-        <h3>切結書 PDF（海報組、短講組皆須繳交）</h3>
-        <div class="file-list">
           <div class="file-item">
-            <span class="file-tag file-tag-both">必繳</span>
+            <span class="file-tag file-tag-talk">簡報 PPT</span>
             <div class="file-desc">
-              <strong>說明：</strong>列印成1張雙面，附件二和三均須簽名，一人一張。掃描後上傳 PDF，並繳交<strong>紙本至圖書館</strong>。<br>
-              <strong>檔名：</strong>計畫名稱＋切結書<br>
-              <a href="https://drive.google.com/file/d/1D4qI1uFzuBuVvXIzWLqL6tzrCM6uyLNV/view?usp=sharing" target="_blank">下載切結書</a>
+              <strong>格式：</strong>統一繳交 PowerPoint 檔（.pptx）<br>
+              <strong>檔名：</strong>簡報-所有組員姓名（不加空白），例：簡報-王一一李二二陳三三<br>
+              <strong>使用 Canva 者：</strong>請另外開放檢視權限給楊瑀婕老師（<a href="mailto:cs11203@gm.cshs.ntct.edu.tw">cs11203@gm.cshs.ntct.edu.tw</a>）
+            </div>
+          </div>
+          <div class="file-item">
+            <span class="file-tag file-tag-both">授權同意書</span>
+            <div class="file-desc">
+              <strong>說明：</strong>列印成1張雙面，附件二和三均須簽名，一人一張，繳交<strong>紙本至圖書館</strong>。<br>
+              <a href="https://drive.google.com/file/d/1D4qI1uFzuBuVvXIzWLqL6tzrCM6uyLNV/view?usp=sharing" target="_blank">下載授權同意書</a>
             </div>
           </div>
         </div>
       </div>
+
     </div>
 
     <!-- 評分標準 -->
@@ -459,9 +506,9 @@ a:hover { text-decoration: underline; }
             <tr><td>自主學習計畫</td><td>5%</td><td>自主學習計畫下載後轉成 PDF 上傳</td></tr>
             <tr><td>摘要</td><td>5%</td><td>讓讀者快速、清楚地理解學習的精髓與價值</td></tr>
             <tr><td>學習動機</td><td>10%</td><td>可描述相關經驗、好奇問題、學習背景或與未來規劃有關</td></tr>
-            <tr><td>學習成果內容呈現</td><td>45%</td><td>可著重學習成長與素養能力</td></tr>
+            <tr><td>學習成果內容呈現</td><td>35%</td><td>可著重學習成長與素養能力</td></tr>
             <tr><td>心得反思</td><td>20%</td><td>過程遭遇問題、問題解決與資源利用、培養的能力、對自我與外在的新發現</td></tr>
-            <tr><td>整體美工設計<br><span style="font-size:11px;color:var(--text-faint)">（短講組另加台風與口條）</span></td><td>10%</td><td>配色和風格一致性、排版與佈局、整體視覺吸引力</td></tr>
+            <tr><td>整體美工設計<br><span style="font-size:11px;color:var(--text-faint)">（短講組另加台風與口條）</span></td><td>20%</td><td>配色和風格一致性、排版與佈局、整體視覺吸引力</td></tr>
             <tr><td>參考圖書</td><td>5%</td><td>借閱相關圖書至少三本以上</td></tr>
           </tbody>
         </table>
@@ -492,9 +539,10 @@ a:hover { text-decoration: underline; }
       <div class="rules-section">
         <h3>加分說明</h3>
         <ul class="rules-list">
-          <li>短講組代表參與南投縣自主學習發表會：記<strong style="color:var(--text)">小功乙次</strong></li>
-          <li>海報組代表參與南投縣自主學習發表會：記<strong style="color:var(--text)">嘉獎貳次</strong></li>
-          <li>得獎作品優先推薦參加區域或縣市自主學習成果發表會，並於校內網站與圖書館展示。</li>
+          <li>短講組代表參與南投縣自主學習發表會：記<strong style="color:var(--text)">小功1次</strong></li>
+          <li>海報組有作品且本人出席南投縣自主學習發表會：記<strong style="color:var(--text)">嘉獎2次</strong></li>
+          <li>海報組有作品但本人未出席南投縣自主學習發表會：記<strong style="color:var(--text)">嘉獎1次</strong></li>
+          <li>得獎作品優先推薦參加南投縣自主學習發表會，並於校內網站與圖書館展示。</li>
         </ul>
       </div>
     </div>
@@ -505,12 +553,9 @@ a:hover { text-decoration: underline; }
   <div class="query-card">
     <div class="stats-grid">
       <div class="stat"><div class="stat-label">海報組 組數</div><div class="stat-value" id="p-total">—</div></div>
-      <div class="stat"><div class="stat-label">海報組 人數</div><div class="stat-value" id="p-members">—</div></div>
       <div class="stat"><div class="stat-label">短講組 組數</div><div class="stat-value" id="t-total">—</div></div>
-      <div class="stat"><div class="stat-label">短講組 人數</div><div class="stat-value" id="t-members">—</div></div>
     </div>
-    <div class="search-row">
-      <input type="text" id="search" placeholder="搜尋姓名或計畫名稱...">
+    <div style="text-align:right;margin-bottom:14px;">
       <button class="btn-refresh" onclick="loadAll()">重新整理</button>
     </div>
     <div class="two-col">
@@ -528,6 +573,18 @@ a:hover { text-decoration: underline; }
 </div>
 
 <script>
+/* ── 字體縮放 ── */
+const FONT_MIN = 13, FONT_MAX = 22, FONT_DEFAULT = 17;
+let fontSize = FONT_DEFAULT;
+function adjustFont(delta) {
+  fontSize = Math.min(FONT_MAX, Math.max(FONT_MIN, fontSize + delta));
+  document.body.style.fontSize = fontSize + 'px';
+  document.getElementById('font-display').textContent = fontSize + 'px';
+  document.getElementById('font-down').disabled = fontSize <= FONT_MIN;
+  document.getElementById('font-up').disabled = fontSize >= FONT_MAX;
+  adjustFont.initialized = true;
+}
+
 /* ── 倒數計時 ── */
 const TARGET_DEADLINE = new Date('2026-05-20T23:59:00+08:00');
 const TARGET_RACE = new Date('2026-05-25T13:10:00+08:00');
@@ -611,16 +668,15 @@ function countMembers(rows) {
   return n;
 }
 
-function renderSection(rows, q, type) {
+function renderSection(rows, type) {
   const badgeClass = type === 'poster' ? 'badge-poster' : 'badge-talk';
-  const filtered = rows.filter(r => Object.values(r).join(' ').toLowerCase().includes(q));
-  if (filtered.length === 0) return '<div class="empty">尚無報名資料</div>';
-  const sample = filtered[0];
+  if (rows.length === 0) return '<div class="empty">尚無報名資料</div>';
+  const sample = rows[0];
   const nameKeys = Object.keys(sample).filter(k => k.includes('姓名'));
   const planKey = Object.keys(sample).find(k => k.includes('計畫')) || '';
   const teacherKey = Object.keys(sample).find(k => k.includes('教師')) || '';
   const timeKey = Object.keys(sample).find(k => k.includes('時間') || k.toLowerCase().includes('timestamp')) || '';
-  return filtered.map((r, i) => {
+  return rows.map((r, i) => {
     const plan = planKey ? (r[planKey] || '（未填計畫名稱）') : '（未填）';
     const time = timeKey ? r[timeKey] : '';
     const members = nameKeys.map(k => {
@@ -638,18 +694,11 @@ function renderSection(rows, q, type) {
 }
 
 function renderAll() {
-  const q = (document.getElementById('search').value || '').toLowerCase();
-  const pF = posterRows.filter(r => Object.values(r).join(' ').toLowerCase().includes(q));
-  const tF = talkRows.filter(r => Object.values(r).join(' ').toLowerCase().includes(q));
-  document.getElementById('p-total').textContent = pF.length;
-  document.getElementById('p-members').textContent = countMembers(pF);
-  document.getElementById('t-total').textContent = tF.length;
-  document.getElementById('t-members').textContent = countMembers(tF);
-  document.getElementById('poster-content').innerHTML = posterRows.length ? renderSection(posterRows, q, 'poster') : '<div class="empty">尚無報名資料</div>';
-  document.getElementById('talk-content').innerHTML = talkRows.length ? renderSection(talkRows, q, 'talk') : '<div class="empty">尚無報名資料</div>';
+  document.getElementById('p-total').textContent = posterRows.length;
+  document.getElementById('t-total').textContent = talkRows.length;
+  document.getElementById('poster-content').innerHTML = posterRows.length ? renderSection(posterRows, 'poster') : '<div class="empty">尚無報名資料</div>';
+  document.getElementById('talk-content').innerHTML = talkRows.length ? renderSection(talkRows, 'talk') : '<div class="empty">尚無報名資料</div>';
 }
-
-document.getElementById('search').addEventListener('input', renderAll);
 
 async function loadAll() {
   document.getElementById('poster-content').innerHTML = '<div class="loading">載入中...</div>';
