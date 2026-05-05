@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>114-2 竹高自主學習校內競賽</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --border: #e4e4de;
+  --text: #1a1a1a;
+  --text-muted: #666;
+  --text-faint: #aaa;
+  --blue-bg: #E6F1FB;
+  --blue-text: #0C447C;
+  --blue-mid: #185FA5;
+  --green-bg: #E1F5EE;
+  --green-text: #085041;
+  --green-mid: #0F6E56;
+  --amber-bg: #FAEEDA;
+  --amber-text: #633806;
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+a { color: var(--blue-mid); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── 頁首 ── */
+.site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 24px;
+  text-align: center;
+}
+.site-header .school { font-size: 13px; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 4px; }
+.site-header .title { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: 0.02em; }
+
+/* ── 版面 ── */
+.container { max-width: 980px; margin: 0 auto; padding: 28px 20px 60px; }
+
+/* ── 區塊標題 ── */
+.section-heading {
+  font-size: 16px; font-weight: 500;
+  border-left: 3px solid var(--text);
+  padding-left: 10px;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+/* ── 倒數計時 ── */
+.countdown-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.countdown-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  text-align: center;
+}
+.countdown-card.deadline-card { border-top: 3px solid #E24B4A; }
+.countdown-card.race-card { border-top: 3px solid #378ADD; }
+.countdown-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; font-weight: 500; }
+.countdown-sublabel { font-size: 11px; color: var(--text-faint); margin-bottom: 14px; }
+.countdown-units { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.countdown-unit { display: flex; flex-direction: column; align-items: center; }
+.countdown-num {
+  font-size: 32px; font-weight: 700; line-height: 1;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  min-width: 58px;
+  text-align: center;
+}
+.countdown-card.deadline-card .countdown-num { color: #A32D2D; background: #FCEBEB; border-color: #F7C1C1; }
+.countdown-card.race-card .countdown-num { color: #185FA5; background: #E6F1FB; border-color: #B5D4F4; }
+.countdown-unit-label { font-size: 11px; color: var(--text-faint); margin-top: 5px; }
+.countdown-sep { font-size: 24px; font-weight: 300; color: var(--border); align-self: center; padding-bottom: 20px; }
+.countdown-ended { font-size: 15px; font-weight: 500; color: var(--text-muted); padding: 12px 0; }
+@media (max-width: 520px) {
+  .countdown-grid { grid-template-columns: 1fr; }
+  .countdown-num { font-size: 26px; min-width: 48px; }
+}
+
+/* ── 快速連結 ── */
+.link-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.link-card {
+  display: block;
+  text-decoration: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 16px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.link-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.07); text-decoration: none; }
+.link-poster { border-top: 3px solid #185FA5; }
+.link-talk { border-top: 3px solid #0F6E56; }
+.link-pledge { border-top: 3px solid #8B6000; }
+.link-card-icon { font-size: 22px; margin-bottom: 8px; }
+.link-card-label { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.link-card-note { font-size: 12px; color: var(--text-faint); }
+.link-poster .link-card-note { color: #185FA5; }
+.link-talk .link-card-note { color: #0F6E56; }
+.link-pledge .link-card-note { color: #8B6000; }
+@media (max-width: 520px) { .link-grid { grid-template-columns: 1fr; } }
+
+/* ── 資訊卡片區 ── */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.info-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.info-card-icon { font-size: 20px; margin-bottom: 8px; }
+.info-card-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+.info-card-value { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.5; }
+
+/* ── 活動辦法 ── */
+.rules-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 28px;
+}
+.rules-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.tab-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: 'Noto Sans TC', sans-serif;
+  transition: all 0.15s;
+}
+.tab-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.rules-section { margin-bottom: 20px; }
+.rules-section:last-child { margin-bottom: 0; }
+.rules-section h3 { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.rules-list { list-style: none; padding: 0; }
+.rules-list li { font-size: 13px; color: var(--text-muted); padding: 4px 0 4px 16px; position: relative; line-height: 1.7; }
+.rules-list li::before { content: '·'; position: absolute; left: 4px; color: var(--text-faint); }
+
+.score-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.score-table th { background: var(--bg); font-weight: 500; font-size: 12px; color: var(--text-muted); padding: 8px 10px; text-align: left; border: 1px solid var(--border); }
+.score-table td { padding: 8px 10px; border: 1px solid var(--border); color: var(--text-muted); vertical-align: top; line-height: 1.6; }
+.score-table td:nth-child(2) { text-align: center; font-weight: 500; color: var(--text); white-space: nowrap; }
+
+.award-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.award-row:last-child { border-bottom: none; }
+.award-badge { font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+.award-gold { background: #FFF8E1; color: #8B6000; }
+.award-silver { background: #F5F5F5; color: #555; }
+.award-bronze { background: #FBE9E7; color: #7B3A2A; }
+.award-merit { background: var(--bg); color: var(--text-muted); }
+.award-detail { font-size: 13px; color: var(--text-muted); }
+
+.file-list { display: flex; flex-direction: column; gap: 8px; }
+.file-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: var(--bg); border-radius: var(--radius-sm);
+  padding: 10px 12px; font-size: 13px;
+}
+.file-tag { font-size: 11px; padding: 2px 8px; border-radius: 20px; white-space: nowrap; margin-top: 1px; }
+.file-tag-poster { background: var(--blue-bg); color: var(--blue-text); }
+.file-tag-talk { background: var(--green-bg); color: var(--green-text); }
+.file-tag-both { background: #F3EFFA; color: #4A3895; }
+.file-desc { color: var(--text-muted); line-height: 1.6; }
+.file-desc strong { color: var(--text); font-weight: 500; }
+
+/* ── 報名查詢 ── */
+.query-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
+.stat { background: var(--bg); border-radius: var(--radius-sm); padding: 12px 14px; }
+.stat-label { font-size: 11px; color: var(--text-faint); margin-bottom: 4px; }
+.stat-value { font-size: 22px; font-weight: 700; color: var(--text); }
+
+.search-row { display: flex; gap: 8px; margin-bottom: 18px; }
+.search-row input {
+  flex: 1; padding: 9px 12px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 14px; background: var(--surface); color: var(--text);
+  font-family: 'Noto Sans TC', sans-serif; outline: none;
+}
+.search-row input:focus { border-color: #888; }
+.btn-refresh {
+  padding: 9px 16px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--text); font-size: 13px; cursor: pointer;
+  font-family: 'Noto Sans TC', sans-serif; white-space: nowrap;
+}
+.btn-refresh:hover { background: var(--bg); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.col-title { font-size: 13px; font-weight: 500; padding: 5px 10px; border-radius: 20px; margin-bottom: 10px; display: inline-block; }
+.col-title-poster { background: var(--blue-bg); color: var(--blue-text); }
+.col-title-talk { background: var(--green-bg); color: var(--green-text); }
+
+.entry-card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 8px;
+}
+.entry-plan { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+.entry-time { font-size: 11px; color: var(--text-faint); margin-bottom: 6px; }
+.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; margin: 2px 2px 2px 0; }
+.badge-poster { background: var(--blue-bg); color: var(--blue-mid); }
+.badge-talk { background: var(--green-bg); color: var(--green-mid); }
+.entry-teacher { font-size: 12px; color: var(--text-faint); margin-top: 6px; }
+
+.empty { text-align: center; padding: 2.5rem 0; color: var(--text-faint); font-size: 13px; }
+.loading { text-align: center; padding: 2.5rem 0; color: var(--text-muted); font-size: 13px; }
+.error-msg { background: #FCEBEB; border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; color: #791F1F; }
+
+/* ── RWD ── */
+@media (max-width: 640px) {
+  .info-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .two-col { grid-template-columns: 1fr; }
+  .countdown-num { font-size: 30px; min-width: 56px; padding: 8px 10px; }
+}
+@media (max-width: 480px) {
+  .site-header .title { font-size: 18px; }
+  .countdown-sep { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- 頁首 -->
+<header class="site-header">
+  <div class="school">國立竹山高級中學</div>
+  <div class="title">114-2 自主學習成果校內競賽</div>
+</header>
+
+<div class="container">
+
+  <!-- 倒數計時 -->
+  <div class="section-heading">競賽倒數</div>
+  <div class="countdown-grid">
+
+    <!-- 報名截止倒數 -->
+    <div class="countdown-card deadline-card">
+      <div class="countdown-label">📅 報名截止倒數</div>
+      <div class="countdown-sublabel">115年5月20日（三）23:59</div>
+      <div id="deadline-display">
+        <div class="countdown-units">
+          <div class="countdown-unit"><div class="countdown-num" id="dl-days">--</div><div class="countdown-unit-label">天</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><div class="countdown-num" id="dl-hours">--</div><div class="countdown-unit-label">小時</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><div class="countdown-num" id="dl-mins">--</div><div class="countdown-unit-label">分鐘</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><div class="countdown-num" id="dl-secs">--</div><div class="countdown-unit-label">秒</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 競賽開始倒數 -->
+    <div class="countdown-card race-card">
+      <div class="countdown-label">🏆 競賽開始倒數</div>
+      <div class="countdown-sublabel">115年5月25日（一）13:10</div>
+      <div id="race-display">
+        <div class="countdown-units">
+          <div class="countdown-unit"><div class="countdown-num" id="cd-days">--</div><div class="countdown-unit-label">天</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><div class="countdown-num" id="cd-hours">--</div><div class="countdown-unit-label">小時</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><div class="countdown-num" id="cd-mins">--</div><div class="countdown-unit-label">分鐘</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><div class="countdown-num" id="cd-secs">--</div><div class="countdown-unit-label">秒</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 快速連結 -->
+  <div class="section-heading">快速連結</div>
+  <div class="link-grid" style="margin-bottom:28px">
+    <a class="link-card link-poster" href="https://docs.google.com/forms/d/e/1FAIpQLSf6u2c6Qaiu7gnVOe0NrKRKmFTKrZLRRtGWgT94uj2QDmM7UA/viewform?usp=header" target="_blank">
+      <div class="link-card-icon">📋</div>
+      <div class="link-card-label">海報組報名表</div>
+      <div class="link-card-note">點此前往填寫 →</div>
+    </a>
+    <a class="link-card link-talk" href="https://docs.google.com/forms/d/e/1FAIpQLSdA_fU0Z0zlfptER0zYAtvSLwewljOVkbzOpIZqLg1kv3cIQA/viewform?usp=header" target="_blank">
+      <div class="link-card-icon">🎤</div>
+      <div class="link-card-label">短講組報名表</div>
+      <div class="link-card-note">點此前往填寫 →</div>
+    </a>
+    <a class="link-card link-pledge" href="https://drive.google.com/file/d/1D4qI1uFzuBuVvXIzWLqL6tzrCM6uyLNV/view?usp=sharing" target="_blank">
+      <div class="link-card-icon">📄</div>
+      <div class="link-card-label">切結書下載</div>
+      <div class="link-card-note">列印後簽名繳交 →</div>
+    </a>
+  </div>
+
+  <!-- 重要資訊 -->
+  <div class="section-heading">重要資訊</div>
+  <div class="info-grid" style="margin-bottom:28px">
+    <div class="info-card">
+      <div class="info-card-icon">📅</div>
+      <div class="info-card-label">報名截止</div>
+      <div class="info-card-value">115年5月20日（三）<br>23:59 前</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🗓️</div>
+      <div class="info-card-label">競賽日期</div>
+      <div class="info-card-value">115年5月25日（一）<br>第5、6節（13:10起）</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">📍</div>
+      <div class="info-card-label">競賽地點</div>
+      <div class="info-card-value">圖書館<br>4樓演講廳</div>
+    </div>
+  </div>
+
+  <!-- 活動辦法 -->
+  <div class="section-heading">活動辦法</div>
+  <div class="rules-card" style="margin-bottom:28px">
+    <div class="rules-tabs">
+      <button class="tab-btn active" onclick="switchTab('tab-how')">參賽方式</button>
+      <button class="tab-btn" onclick="switchTab('tab-files')">繳交檔案</button>
+      <button class="tab-btn" onclick="switchTab('tab-score')">評分標準</button>
+      <button class="tab-btn" onclick="switchTab('tab-award')">獎項說明</button>
+    </div>
+
+    <!-- 參賽方式 -->
+    <div id="tab-how" class="tab-content active">
+      <div class="rules-section">
+        <h3>報名對象</h3>
+        <ul class="rules-list">
+          <li>全校學生自由報名，可個人或以共學小組（最多3人）為單位報名。</li>
+          <li>每組由1人代表報名繳交即可，可重複繳交，以最後繳交那份為參賽作品。</li>
+        </ul>
+      </div>
+      <div class="rules-section">
+        <h3>組別說明</h3>
+        <ul class="rules-list">
+          <li><strong style="color:var(--blue-mid)">海報組</strong>：製作 A1 海報，以靜態展示方式呈現學習成果。</li>
+          <li><strong style="color:var(--green-mid)">短講組</strong>：製作海報並上台簡報，每組上台時間 5～7 分鐘。</li>
+        </ul>
+      </div>
+      <div class="rules-section">
+        <h3>注意事項</h3>
+        <ul class="rules-list">
+          <li>參賽作品限未曾在校外出版、發表或獲獎，不得抄襲或頂用他人名義參賽。</li>
+          <li>所有參賽者均須簽立切結書，掃描後於作品上傳時同步繳交，並繳交<strong style="color:var(--text)">紙本至圖書館</strong>。</li>
+          <li>切結書可<a href="https://drive.google.com/file/d/1D4qI1uFzuBuVvXIzWLqL6tzrCM6uyLNV/view?usp=sharing" target="_blank">自行下載列印</a>或至圖書館索取。</li>
+          <li>短講組出場順序由主辦單位抽籤後公告。</li>
+          <li>如有任何疑問，請洽圖書館馮松林主任或資媒組長楊瑀婕老師（<a href="mailto:cs11203@gm.cshs.ntct.edu.tw">cs11203@gm.cshs.ntct.edu.tw</a>）。</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 繳交檔案 -->
+    <div id="tab-files" class="tab-content">
+      <div class="rules-section">
+        <h3>海報 PDF（海報組、短講組皆須繳交）</h3>
+        <div class="file-list">
+          <div class="file-item">
+            <span class="file-tag file-tag-both">必繳</span>
+            <div class="file-desc">
+              <strong>格式：</strong>A1（594 × 841 mm）、限1頁、相片解析度250dpi以上、檔案不超過10MB<br>
+              <strong>檔名：</strong>海報-所有組員姓名（中間不加空白），例：海報-王一一李二二陳三三<br>
+              <strong>海報內容須包含：</strong>標頭「114-2 南投縣高級中等學校適性學習社區自主學習聯合成果發表會」、學校名稱（國立竹山高級中學）、主題、指導教師、作者
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rules-section">
+        <h3>自主學習計畫 PDF（海報組、短講組皆須繳交）</h3>
+        <div class="file-list">
+          <div class="file-item">
+            <span class="file-tag file-tag-both">必繳</span>
+            <div class="file-desc">
+              <strong>檔名：</strong>計畫名稱
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rules-section">
+        <h3>簡報檔（僅短講組須繳交）</h3>
+        <div class="file-list">
+          <div class="file-item">
+            <span class="file-tag file-tag-talk">短講組</span>
+            <div class="file-desc">
+              <strong>格式：</strong>PowerPoint（.pptx）或 Canva 匯出 PDF<br>
+              <strong>檔名：</strong>計畫名稱＋簡報
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rules-section">
+        <h3>切結書 PDF（海報組、短講組皆須繳交）</h3>
+        <div class="file-list">
+          <div class="file-item">
+            <span class="file-tag file-tag-both">必繳</span>
+            <div class="file-desc">
+              <strong>說明：</strong>列印成1張雙面，附件二和三均須簽名，一人一張。掃描後上傳 PDF，並繳交<strong>紙本至圖書館</strong>。<br>
+              <strong>檔名：</strong>計畫名稱＋切結書<br>
+              <a href="https://drive.google.com/file/d/1D4qI1uFzuBuVvXIzWLqL6tzrCM6uyLNV/view?usp=sharing" target="_blank">下載切結書</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 評分標準 -->
+    <div id="tab-score" class="tab-content">
+      <div class="rules-section">
+        <h3>評分項目與比例</h3>
+        <table class="score-table">
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>比例</th>
+              <th>說明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>自主學習計畫</td><td>5%</td><td>自主學習計畫下載後轉成 PDF 上傳</td></tr>
+            <tr><td>摘要</td><td>5%</td><td>讓讀者快速、清楚地理解學習的精髓與價值</td></tr>
+            <tr><td>學習動機</td><td>10%</td><td>可描述相關經驗、好奇問題、學習背景或與未來規劃有關</td></tr>
+            <tr><td>學習成果內容呈現</td><td>45%</td><td>可著重學習成長與素養能力</td></tr>
+            <tr><td>心得反思</td><td>20%</td><td>過程遭遇問題、問題解決與資源利用、培養的能力、對自我與外在的新發現</td></tr>
+            <tr><td>整體美工設計<br><span style="font-size:11px;color:var(--text-faint)">（短講組另加台風與口條）</span></td><td>10%</td><td>配色和風格一致性、排版與佈局、整體視覺吸引力</td></tr>
+            <tr><td>參考圖書</td><td>5%</td><td>借閱相關圖書至少三本以上</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 獎項說明 -->
+    <div id="tab-award" class="tab-content">
+      <div class="rules-section">
+        <h3>海報組、短講組各設以下獎項</h3>
+        <div class="award-row">
+          <span class="award-badge award-gold">金質獎</span>
+          <span class="award-detail">獎金 1,000 元 ＋ 獎狀乙紙</span>
+        </div>
+        <div class="award-row">
+          <span class="award-badge award-silver">銀質獎</span>
+          <span class="award-detail">獎金 800 元 ＋ 獎狀乙紙</span>
+        </div>
+        <div class="award-row">
+          <span class="award-badge award-bronze">銅質獎</span>
+          <span class="award-detail">獎金 600 元 ＋ 獎狀乙紙</span>
+        </div>
+        <div class="award-row">
+          <span class="award-badge award-merit">佳作</span>
+          <span class="award-detail">獎金 200 元 ＋ 獎狀乙紙</span>
+        </div>
+      </div>
+      <div class="rules-section">
+        <h3>加分說明</h3>
+        <ul class="rules-list">
+          <li>短講組代表參與南投縣自主學習發表會：記<strong style="color:var(--text)">小功乙次</strong></li>
+          <li>海報組代表參與南投縣自主學習發表會：記<strong style="color:var(--text)">嘉獎貳次</strong></li>
+          <li>得獎作品優先推薦參加區域或縣市自主學習成果發表會，並於校內網站與圖書館展示。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 報名查詢 -->
+  <div class="section-heading">報名查詢</div>
+  <div class="query-card">
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-label">海報組 組數</div><div class="stat-value" id="p-total">—</div></div>
+      <div class="stat"><div class="stat-label">海報組 人數</div><div class="stat-value" id="p-members">—</div></div>
+      <div class="stat"><div class="stat-label">短講組 組數</div><div class="stat-value" id="t-total">—</div></div>
+      <div class="stat"><div class="stat-label">短講組 人數</div><div class="stat-value" id="t-members">—</div></div>
+    </div>
+    <div class="search-row">
+      <input type="text" id="search" placeholder="搜尋姓名或計畫名稱...">
+      <button class="btn-refresh" onclick="loadAll()">重新整理</button>
+    </div>
+    <div class="two-col">
+      <div>
+        <span class="col-title col-title-poster">海報組</span>
+        <div id="poster-content"><div class="loading">載入中...</div></div>
+      </div>
+      <div>
+        <span class="col-title col-title-talk">短講組</span>
+        <div id="talk-content"><div class="loading">載入中...</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ── 倒數計時 ── */
+const TARGET_DEADLINE = new Date('2026-05-20T23:59:00+08:00');
+const TARGET_RACE = new Date('2026-05-25T13:10:00+08:00');
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function updateCountdown() {
+  const now = new Date();
+
+  /* 報名截止 */
+  const dl = TARGET_DEADLINE - now;
+  if (dl <= 0) {
+    document.getElementById('deadline-display').innerHTML = '<div class="countdown-ended">報名已截止</div>';
+  } else {
+    const d = Math.floor(dl / 86400000);
+    const h = Math.floor((dl % 86400000) / 3600000);
+    const m = Math.floor((dl % 3600000) / 60000);
+    const s = Math.floor((dl % 60000) / 1000);
+    document.getElementById('dl-days').textContent = d;
+    document.getElementById('dl-hours').textContent = pad(h);
+    document.getElementById('dl-mins').textContent = pad(m);
+    document.getElementById('dl-secs').textContent = pad(s);
+  }
+
+  /* 競賽開始 */
+  const rc = TARGET_RACE - now;
+  if (rc <= 0) {
+    document.getElementById('race-display').innerHTML = '<div class="countdown-ended">競賽已開始！</div>';
+  } else {
+    const d = Math.floor(rc / 86400000);
+    const h = Math.floor((rc % 86400000) / 3600000);
+    const m = Math.floor((rc % 3600000) / 60000);
+    const s = Math.floor((rc % 60000) / 1000);
+    document.getElementById('cd-days').textContent = d;
+    document.getElementById('cd-hours').textContent = pad(h);
+    document.getElementById('cd-mins').textContent = pad(m);
+    document.getElementById('cd-secs').textContent = pad(s);
+  }
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+/* ── 分頁切換 ── */
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+/* ── 姓名遮罩 ── */
+function maskName(name) {
+  if (!name || name.trim() === '') return '';
+  const n = name.trim();
+  if (n.length <= 1) return n;
+  if (n.length === 2) return n[0] + '〇';
+  return n[0] + '〇'.repeat(n.length - 2) + n[n.length - 1];
+}
+
+/* ── Google Sheets ── */
+const SHEET_ID = '1PWYrF8dudesvDoDBhIOUFt1dNPNOZcvo9bH2R6-bPZs';
+const POSTER_GID = '1869239395';
+const TALK_GID = '1035878205';
+let posterRows = [], talkRows = [];
+
+function fetchSheet(gid) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${gid}`;
+  return fetch(url).then(r => r.text()).then(raw => {
+    const json = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
+    const cols = json.table.cols.map(c => c.label);
+    return json.table.rows.map(r => {
+      const obj = {};
+      r.c.forEach((cell, i) => { obj[cols[i]] = cell ? (cell.f || cell.v || '') : ''; });
+      return obj;
+    }).filter(r => Object.values(r).some(v => v && v.toString().trim()));
+  });
+}
+
+function countMembers(rows) {
+  let n = 0;
+  rows.forEach(r => Object.keys(r).forEach(k => { if (k.includes('姓名') && r[k] && r[k].trim()) n++; }));
+  return n;
+}
+
+function renderSection(rows, q, type) {
+  const badgeClass = type === 'poster' ? 'badge-poster' : 'badge-talk';
+  const filtered = rows.filter(r => Object.values(r).join(' ').toLowerCase().includes(q));
+  if (filtered.length === 0) return '<div class="empty">尚無報名資料</div>';
+  const sample = filtered[0];
+  const nameKeys = Object.keys(sample).filter(k => k.includes('姓名'));
+  const planKey = Object.keys(sample).find(k => k.includes('計畫')) || '';
+  const teacherKey = Object.keys(sample).find(k => k.includes('教師')) || '';
+  const timeKey = Object.keys(sample).find(k => k.includes('時間') || k.toLowerCase().includes('timestamp')) || '';
+  return filtered.map((r, i) => {
+    const plan = planKey ? (r[planKey] || '（未填計畫名稱）') : '（未填）';
+    const time = timeKey ? r[timeKey] : '';
+    const members = nameKeys.map(k => {
+      const name = (r[k] || '').trim();
+      return name ? `<span class="badge ${badgeClass}">${maskName(name)}</span>` : '';
+    }).join('');
+    const teacher = teacherKey ? (r[teacherKey] || '—') : '—';
+    return `<div class="entry-card">
+      <div class="entry-plan">${i + 1}. ${plan}</div>
+      ${time ? `<div class="entry-time">${time}</div>` : ''}
+      <div>${members || '<span style="color:var(--text-faint);font-size:12px">（未填姓名）</span>'}</div>
+      <div class="entry-teacher">指導老師：${teacher}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderAll() {
+  const q = (document.getElementById('search').value || '').toLowerCase();
+  const pF = posterRows.filter(r => Object.values(r).join(' ').toLowerCase().includes(q));
+  const tF = talkRows.filter(r => Object.values(r).join(' ').toLowerCase().includes(q));
+  document.getElementById('p-total').textContent = pF.length;
+  document.getElementById('p-members').textContent = countMembers(pF);
+  document.getElementById('t-total').textContent = tF.length;
+  document.getElementById('t-members').textContent = countMembers(tF);
+  document.getElementById('poster-content').innerHTML = posterRows.length ? renderSection(posterRows, q, 'poster') : '<div class="empty">尚無報名資料</div>';
+  document.getElementById('talk-content').innerHTML = talkRows.length ? renderSection(talkRows, q, 'talk') : '<div class="empty">尚無報名資料</div>';
+}
+
+document.getElementById('search').addEventListener('input', renderAll);
+
+async function loadAll() {
+  document.getElementById('poster-content').innerHTML = '<div class="loading">載入中...</div>';
+  document.getElementById('talk-content').innerHTML = '<div class="loading">載入中...</div>';
+  try {
+    const [p, t] = await Promise.all([fetchSheet(POSTER_GID), fetchSheet(TALK_GID)]);
+    posterRows = p; talkRows = t;
+    renderAll();
+  } catch(e) {
+    const msg = `<div class="error-msg">無法載入資料，請確認試算表已公開分享。(${e.message})</div>`;
+    document.getElementById('poster-content').innerHTML = msg;
+    document.getElementById('talk-content').innerHTML = msg;
+  }
+}
+loadAll();
+</script>
+</body>
+</html>
