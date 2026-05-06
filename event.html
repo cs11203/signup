@@ -409,11 +409,11 @@ a:hover { text-decoration: underline; }
     </div>
     <div class="two-col">
       <div>
-        <span class="col-title col-title-blue">教師（帶隊、參展、觀摩）</span>
+        <span class="col-title col-title-blue">教師</span>
         <div id="teacher-list"><div class="loading">載入中...</div></div>
       </div>
       <div>
-        <span class="col-title col-title-green">學生（參展、觀摩）</span>
+        <span class="col-title col-title-green">學生</span>
         <div id="student-list"><div class="loading">載入中...</div></div>
       </div>
     </div>
@@ -526,7 +526,6 @@ async function loadData() {
       if (list.length === 0) { el.innerHTML = '<div class="empty">尚無報名資料</div>'; return; }
       el.innerHTML = list.map(p => `
         <div class="entry-card">
-          <div class="entry-identity">${p.identity || '—'}</div>
           <div class="entry-name">${maskName(p.name) || '（未填姓名）'}</div>
         </div>`).join('');
     };
