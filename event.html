@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>114-2 南投縣自主學習成果聯合發表會</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --border: #e4e4de;
+  --text: #1a1a1a;
+  --text-muted: #666;
+  --text-faint: #aaa;
+  --blue-bg: #E6F1FB;
+  --blue-text: #0C447C;
+  --blue-mid: #185FA5;
+  --green-bg: #E1F5EE;
+  --green-text: #085041;
+  --green-mid: #0F6E56;
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); font-size: 17px; line-height: 1.7; }
+a { color: var(--blue-mid); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* 頁首 */
+.site-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 20px 24px 16px; text-align: center; }
+.site-header .school { font-size: 14px; color: var(--text-muted); margin-bottom: 2px; }
+.site-header .sub { font-size: 14px; color: var(--text-muted); margin-bottom: 4px; }
+.site-header .title { font-size: 26px; font-weight: 700; color: var(--text); }
+
+/* 版面 */
+.container { max-width: 980px; margin: 0 auto; padding: 28px 20px 60px; }
+
+/* 區塊標題 */
+.section-heading { font-size: 18px; font-weight: 500; border-left: 3px solid var(--text); padding-left: 10px; margin-bottom: 16px; color: var(--text); }
+
+/* 倒數 */
+.countdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+.countdown-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 16px; text-align: center; }
+.countdown-card.deadline-card { border-top: 3px solid #E24B4A; }
+.countdown-card.race-card { border-top: 3px solid #378ADD; }
+.countdown-label { font-size: 16px; color: var(--text-muted); margin-bottom: 4px; font-weight: 500; }
+.countdown-sublabel { font-size: 14px; color: var(--text-faint); margin-bottom: 14px; }
+.countdown-units { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.countdown-unit { display: flex; flex-direction: column; align-items: center; }
+.countdown-num { font-size: 32px; font-weight: 700; line-height: 1; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; min-width: 58px; text-align: center; }
+.deadline-card .countdown-num { color: #A32D2D; background: #FCEBEB; border-color: #F7C1C1; }
+.race-card .countdown-num { color: #185FA5; background: #E6F1FB; border-color: #B5D4F4; }
+.countdown-unit-label { font-size: 14px; color: var(--text-faint); margin-top: 5px; }
+.countdown-sep { font-size: 24px; font-weight: 300; color: var(--border); align-self: center; padding-bottom: 20px; }
+.countdown-ended { font-size: 16px; font-weight: 500; color: var(--text-muted); padding: 12px 0; }
+
+/* 快速連結 */
+.link-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
+.link-card { display: block; text-decoration: none; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 16px; transition: transform 0.15s, box-shadow 0.15s; }
+.link-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.07); text-decoration: none; }
+.link-card-icon { font-size: 22px; margin-bottom: 8px; }
+.link-card-label { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.link-card-note { font-size: 13px; color: var(--text-faint); }
+
+/* 重要資訊 */
+.info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
+.info-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+.info-card-icon { font-size: 20px; margin-bottom: 8px; }
+.info-card-label { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
+.info-card-value { font-size: 16px; font-weight: 500; color: var(--text); line-height: 1.5; }
+
+/* 活動辦法 */
+.rules-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 28px; }
+.rules-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.tab-btn { padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text-muted); font-size: 15px; cursor: pointer; font-family: 'Noto Sans TC', sans-serif; transition: all 0.15s; }
+.tab-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.rules-section { margin-bottom: 20px; }
+.rules-section:last-child { margin-bottom: 0; }
+.rules-section h3 { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.rules-list { list-style: none; padding: 0; }
+.rules-list li { font-size: 15px; color: var(--text-muted); padding: 4px 0 4px 16px; position: relative; line-height: 1.7; }
+.rules-list li::before { content: '·'; position: absolute; left: 4px; color: var(--text-faint); }
+
+/* 程序表時間軸 */
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before { content: ''; position: absolute; left: 9px; top: 12px; bottom: 12px; width: 1.5px; background: var(--border); }
+.tl-item { position: relative; display: flex; gap: 16px; }
+.tl-item:last-child .tl-body { border-bottom: none; }
+.tl-dot { position: absolute; left: -22px; top: 16px; width: 10px; height: 10px; border-radius: 50%; background: var(--surface); border: 2px solid var(--border); }
+.tl-item.cshs .tl-dot { background: #0F6E56; border-color: #0F6E56; }
+.tl-item.school .tl-dot { background: var(--surface); border: 2px dashed #aaa; }
+.tl-body { flex: 1; padding: 10px 0 12px; border-bottom: 0.5px solid var(--border); display: flex; gap: 16px; align-items: flex-start; }
+.tl-time { font-size: 13px; color: var(--text-faint); white-space: nowrap; min-width: 100px; padding-top: 2px; }
+.tl-content .tl-title { font-size: 15px; font-weight: 500; color: var(--text); line-height: 1.4; }
+.tl-item.school .tl-title { color: var(--text-muted); }
+.tl-content .tl-sub { font-size: 13px; color: var(--text-muted); margin-top: 3px; line-height: 1.5; }
+.tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
+.tag-talk { background: #E1F5EE; color: #0F6E56; }
+.tag-rest { background: #F1EFE8; color: #5F5E5A; }
+.tag-end { background: #FAEEDA; color: #633806; }
+.tag-school { background: #F1EFE8; color: #888; }
+
+/* 繳件說明 */
+.file-list { display: flex; flex-direction: column; gap: 8px; }
+.file-item { display: flex; align-items: flex-start; gap: 10px; background: var(--bg); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 15px; }
+.file-tag { font-size: 13px; padding: 2px 8px; border-radius: 20px; white-space: nowrap; margin-top: 1px; }
+.file-tag-blue { background: var(--blue-bg); color: var(--blue-text); }
+.file-tag-green { background: var(--green-bg); color: var(--green-text); }
+.file-tag-both { background: #F3EFFA; color: #4A3895; }
+.file-desc { color: var(--text-muted); line-height: 1.6; }
+.file-desc strong { color: var(--text); font-weight: 500; }
+
+/* 報名統計 */
+.query-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+.stats-grid { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.stat { background: var(--bg); border-radius: var(--radius-sm); padding: 12px 20px; text-align: center; flex: 1; max-width: 180px; }
+.stat-label { font-size: 13px; color: var(--text-faint); margin-bottom: 4px; }
+.stat-value { font-size: 28px; font-weight: 700; color: var(--text); }
+.btn-refresh { padding: 9px 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-size: 14px; cursor: pointer; font-family: 'Noto Sans TC', sans-serif; }
+.btn-refresh:hover { background: var(--bg); }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+.col-title { font-size: 14px; font-weight: 500; padding: 5px 10px; border-radius: 20px; margin-bottom: 10px; display: inline-block; }
+.col-title-blue { background: var(--blue-bg); color: var(--blue-text); }
+.col-title-green { background: var(--green-bg); color: var(--green-text); }
+.entry-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 8px; }
+.entry-identity { font-size: 12px; color: var(--text-faint); margin-bottom: 4px; }
+.entry-name { font-size: 15px; font-weight: 500; color: var(--text); }
+.empty { text-align: center; padding: 2rem 0; color: var(--text-faint); font-size: 14px; }
+.loading { text-align: center; padding: 2rem 0; color: var(--text-muted); font-size: 14px; }
+.error-msg { background: #FCEBEB; border-radius: var(--radius-sm); padding: 10px 14px; font-size: 14px; color: #791F1F; }
+
+/* RWD */
+@media (max-width: 640px) {
+  .countdown-grid { grid-template-columns: 1fr; }
+  .link-grid { grid-template-columns: 1fr; }
+  .info-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .countdown-num { font-size: 26px; min-width: 48px; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="school">國立竹山高級中學 報名用</div>
+  <div class="title">114-2 南投縣自主學習成果聯合發表會</div>
+</header>
+
+<div class="container">
+
+  <!-- 倒數計時 -->
+  <div class="section-heading">活動倒數</div>
+  <div class="countdown-grid">
+    <div class="countdown-card deadline-card">
+      <div class="countdown-label">📅 報名截止倒數</div>
+      <div class="countdown-sublabel">115年5月22日（五）17:00</div>
+      <div id="deadline-display">
+        <div class="countdown-units">
+          <div class="countdown-unit"><div class="countdown-num" id="dl-days">--</div><div class="countdown-unit-label">天</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><div class="countdown-num" id="dl-hours">--</div><div class="countdown-unit-label">小時</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><div class="countdown-num" id="dl-mins">--</div><div class="countdown-unit-label">分鐘</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><div class="countdown-num" id="dl-secs">--</div><div class="countdown-unit-label">秒</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="countdown-card race-card">
+      <div class="countdown-label">🏆 活動開始倒數</div>
+      <div class="countdown-sublabel">115年6月13日（六）8:30</div>
+      <div id="race-display">
+        <div class="countdown-units">
+          <div class="countdown-unit"><div class="countdown-num" id="cd-days">--</div><div class="countdown-unit-label">天</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><div class="countdown-num" id="cd-hours">--</div><div class="countdown-unit-label">小時</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><div class="countdown-num" id="cd-mins">--</div><div class="countdown-unit-label">分鐘</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><div class="countdown-num" id="cd-secs">--</div><div class="countdown-unit-label">秒</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 快速連結 -->
+  <div class="section-heading">快速連結</div>
+  <div class="link-grid">
+    <a class="link-card" href="https://docs.google.com/forms/d/e/1FAIpQLSfybUbFsnOc5pthc2rrVlPi_wKiBdt_78yIlw-zwiCaZi_7Ow/viewform?usp=sharing" target="_blank" style="border-top:3px solid #185FA5;">
+      <div class="link-card-icon">📋</div>
+      <div class="link-card-label">發表會報名表</div>
+      <div class="link-card-note" style="color:#185FA5;">點此前往填寫 →</div>
+      <div style="font-size:13px;color:#C0392B;margin-top:6px;">登入竹高Gmail填寫</div>
+    </a>
+    <a class="link-card" href="https://drive.google.com/file/d/1bygHapzch8LXlwG75TH06hdkLqLdMhby/view?usp=sharing" target="_blank" style="border-top:3px solid #0F6E56;">
+      <div class="link-card-icon">📗</div>
+      <div class="link-card-label">114-2 南投縣聯合發表實施計畫</div>
+      <div class="link-card-note" style="color:#0F6E56;">點此查看 →</div>
+    </a>
+  </div>
+
+  <!-- 重要資訊 -->
+  <div class="section-heading">重要資訊</div>
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-card-icon">📅</div>
+      <div class="info-card-label">報名截止</div>
+      <div class="info-card-value">115年5月22日（五）<br>17:00</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🗓️</div>
+      <div class="info-card-label">發表會日期</div>
+      <div class="info-card-value">115年6月13日（六）<br>8:30 – 12:30</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">📍</div>
+      <div class="info-card-label">發表會地點</div>
+      <div class="info-card-value">國立中興高級中學<br>行政大樓一樓演講廳</div>
+    </div>
+  </div>
+
+  <!-- 活動辦法 -->
+  <div class="section-heading">活動說明</div>
+  <div class="rules-card">
+    <div class="rules-tabs">
+      <button class="tab-btn active" onclick="switchTab('tab-info', event)">竹高行程</button>
+      <button class="tab-btn" onclick="switchTab('tab-schedule', event)">當天程序</button>
+      <button class="tab-btn" onclick="switchTab('tab-notes', event)">注意事項</button>
+    </div>
+
+    <!-- 竹高行程 -->
+    <div id="tab-info" class="tab-content active">
+      <div class="rules-section">
+        <h3>竹高行程安排</h3>
+        <div class="timeline">
+          <div class="tl-item school">
+            <div class="tl-dot"></div>
+            <div class="tl-body">
+              <div class="tl-time">07:30</div>
+              <div class="tl-content">
+                <div class="tl-title">竹山高中弘道樓1樓中廊集合 <span class="tag tag-school">竹高</span></div>
+                <div class="tl-sub">請準時到場，勿遲到</div>
+              </div>
+            </div>
+          </div>
+          <div class="tl-item cshs">
+            <div class="tl-dot"></div>
+            <div class="tl-body">
+              <div class="tl-time">08:20 – 08:30</div>
+              <div class="tl-content"><div class="tl-title">報到</div><div class="tl-sub">國立中興高級中學行政大樓一樓演講廳</div></div>
+            </div>
+          </div>
+          <div class="tl-item cshs">
+            <div class="tl-dot"></div>
+            <div class="tl-body">
+              <div class="tl-time">08:30 – 12:30</div>
+              <div class="tl-content"><div class="tl-title">南投縣自主學習聯合成果發表會</div><div class="tl-sub">詳見「當天程序」分頁</div></div>
+            </div>
+          </div>
+          <div class="tl-item school">
+            <div class="tl-dot"></div>
+            <div class="tl-body" style="border-bottom:none;">
+              <div class="tl-time">13:00</div>
+              <div class="tl-content">
+                <div class="tl-title">返回竹山高中 <span class="tag tag-school">竹高</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 當天程序 -->
+    <div id="tab-schedule" class="tab-content">
+      <div class="rules-section">
+        <h3>115年6月13日（六）程序表</h3>
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">地點：國立中興高級中學行政大樓一樓演講廳（南投縣南投市中學路2號）</div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-body">
+              <div class="tl-time">08:20 – 08:30</div>
+              <div class="tl-content"><div class="tl-title">報到</div><div class="tl-sub">國立中興高級中學團隊</div></div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-body">
+              <div class="tl-time">08:30 – 08:40</div>
+              <div class="tl-content">
+                <div class="tl-title">開幕及致詞</div>
+                <div class="tl-sub">林松柏教授（暨南國際大學）、楊建州教授（中山醫學大學）、林佳靜教授（弘光科技大學）、陳漢銘校長、程彥森主任</div>
+              </div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-body">
+              <div class="tl-time">08:40 – 08:45</div>
+              <div class="tl-content"><div class="tl-title">成果發表說明</div></div>
+            </div>
+          </div>
+          <div class="tl-item cshs">
+            <div class="tl-dot"></div>
+            <div class="tl-body">
+              <div class="tl-time">08:45 – 09:55</div>
+              <div class="tl-content">
+                <div class="tl-title">我的學習路 — 學生短講 <span class="tag tag-talk">第一梯次</span></div>
+                <div class="tl-sub">各校依抽籤順序上台；大專校院教授講評</div>
+              </div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-body">
+              <div class="tl-time">09:55 – 10:05</div>
+              <div class="tl-content"><div class="tl-title">休息 <span class="tag tag-rest">中場</span></div></div>
+            </div>
+          </div>
+          <div class="tl-item cshs">
+            <div class="tl-dot"></div>
+            <div class="tl-body">
+              <div class="tl-time">10:05 – 11:15</div>
+              <div class="tl-content">
+                <div class="tl-title">我的學習路 — 學生短講 <span class="tag tag-talk">第二梯次</span></div>
+                <div class="tl-sub">各校依抽籤順序上台；大專校院教授講評</div>
+              </div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-body">
+              <div class="tl-time">11:15 – 11:20</div>
+              <div class="tl-content"><div class="tl-title">集體合影</div><div class="tl-sub">舞台開放各校師生合影</div></div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-body">
+              <div class="tl-time">11:20 – 12:00</div>
+              <div class="tl-content"><div class="tl-title">茶敘 ／ 靜態海報與作品展</div></div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-body">
+              <div class="tl-time">12:00 – 12:30</div>
+              <div class="tl-content">
+                <div class="tl-title">講評及綜合座談</div>
+                <div class="tl-sub">林松柏教授、楊建州教授、林佳靜教授、陳漢銘校長、程彥森主任</div>
+              </div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-body" style="border-bottom:none;">
+              <div class="tl-time">12:30</div>
+              <div class="tl-content">
+                <div class="tl-title">活動圓滿結束 <span class="tag tag-end">賦歸</span></div>
+                <div class="tl-sub">敬備午餐</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;font-size:13px;color:var(--text-faint);">
+          ● 綠色圓點為學生短講時段
+        </div>
+      </div>
+    </div>
+
+    <!-- 注意事項 -->
+    <div id="tab-notes" class="tab-content">
+      <div class="rules-section">
+        <h3>報名相關</h3>
+        <ul class="rules-list">
+          <li>各校參展與觀摩人員均須事先報名，請填寫上方報名表。</li>
+          <li>報名截止：115年5月22日（五）17:00。</li>
+          <li>本活動提供參展學生保險，請提供完整個人及法定代理人資料。</li>
+        </ul>
+      </div>
+      <div class="rules-section">
+        <h3>當天注意事項</h3>
+        <ul class="rules-list">
+          <li>自行前往者請於 6月13日（六）08:20 至 08:30 完成報到。</li>
+          <li>本活動敬備午餐及茶點，請於報名表勾選葷食或素食。</li>
+          <li>當日參展與觀摩師生及家長名冊，請於報名表依實際身分別勾選。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 報名統計 -->
+  <div class="section-heading">報名統計 <span style="font-size:14px;font-weight:400;color:var(--text-muted);">（統計數據僅供參考）</span></div>
+  <div class="query-card">
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-label">參展教師</div><div class="stat-value" id="s-exhibit-teacher">—</div></div>
+      <div class="stat"><div class="stat-label">參展學生</div><div class="stat-value" id="s-exhibit-student">—</div></div>
+      <div class="stat"><div class="stat-label">觀摩教師</div><div class="stat-value" id="s-obs-teacher">—</div></div>
+      <div class="stat"><div class="stat-label">觀摩學生</div><div class="stat-value" id="s-obs-student">—</div></div>
+      <div class="stat"><div class="stat-label">觀摩家長</div><div class="stat-value" id="s-obs-parent">—</div></div>
+    </div>
+    <div style="text-align:right;margin-bottom:14px;">
+      <button class="btn-refresh" onclick="loadData()">重新整理</button>
+    </div>
+    <div class="two-col">
+      <div>
+        <span class="col-title col-title-blue">教師（帶隊、參展、觀摩）</span>
+        <div id="teacher-list"><div class="loading">載入中...</div></div>
+      </div>
+      <div>
+        <span class="col-title col-title-green">學生（參展、觀摩）</span>
+        <div id="student-list"><div class="loading">載入中...</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ── 倒數計時 ── */
+const TARGET_DL = new Date('2026-05-22T17:00:00+08:00');
+const TARGET_RC = new Date('2026-06-13T08:30:00+08:00');
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function updateCountdown() {
+  const now = new Date();
+  const dl = TARGET_DL - now;
+  if (dl <= 0) {
+    document.getElementById('deadline-display').innerHTML = '<div class="countdown-ended">報名已截止</div>';
+  } else {
+    const d = Math.floor(dl / 86400000);
+    const h = Math.floor((dl % 86400000) / 3600000);
+    const m = Math.floor((dl % 3600000) / 60000);
+    const s = Math.floor((dl % 60000) / 1000);
+    document.getElementById('dl-days').textContent = d;
+    document.getElementById('dl-hours').textContent = pad(h);
+    document.getElementById('dl-mins').textContent = pad(m);
+    document.getElementById('dl-secs').textContent = pad(s);
+  }
+  const rc = TARGET_RC - now;
+  if (rc <= 0) {
+    document.getElementById('race-display').innerHTML = '<div class="countdown-ended">活動已開始！</div>';
+  } else {
+    const d = Math.floor(rc / 86400000);
+    const h = Math.floor((rc % 86400000) / 3600000);
+    const m = Math.floor((rc % 3600000) / 60000);
+    const s = Math.floor((rc % 60000) / 1000);
+    document.getElementById('cd-days').textContent = d;
+    document.getElementById('cd-hours').textContent = pad(h);
+    document.getElementById('cd-mins').textContent = pad(m);
+    document.getElementById('cd-secs').textContent = pad(s);
+  }
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+/* ── 分頁切換 ── */
+function switchTab(id, e) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  e.currentTarget.classList.add('active');
+}
+
+/* ── 姓名遮罩 ── */
+function maskName(name) {
+  if (!name || !name.trim()) return '';
+  const n = name.trim();
+  if (n.length <= 1) return n;
+  if (n.length === 2) return n[0] + '〇';
+  return n[0] + '〇'.repeat(n.length - 2) + n[n.length - 1];
+}
+
+/* ── Google Sheets ── */
+const SHEET_ID = '1PWYrF8dudesvDoDBhIOUFt1dNPNOZcvo9bH2R6-bPZs';
+const GID = '202432453';
+
+async function loadData() {
+  document.getElementById('teacher-list').innerHTML = '<div class="loading">載入中...</div>';
+  document.getElementById('student-list').innerHTML = '<div class="loading">載入中...</div>';
+
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}`;
+    const raw = await fetch(url).then(r => r.text());
+    const json = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
+    const cols = json.table.cols.map(c => c.label);
+    const rows = json.table.rows.map(r => {
+      const obj = {};
+      r.c.forEach((cell, i) => { obj[cols[i]] = cell ? (cell.f || cell.v || '') : ''; });
+      return obj;
+    }).filter(r => {
+      const tk = Object.keys(r).find(k => k.includes('時間') || k.toLowerCase().includes('timestamp'));
+      return tk && r[tk] && r[tk].toString().trim();
+    });
+
+    const nameKey = cols.find(c => c === '姓名') || '';
+    const identityKey = cols.find(c => c.includes('身分別')) || '';
+
+    let exhibitTeacher = 0, exhibitStudent = 0, obsTeacher = 0, obsStudent = 0, obsParent = 0;
+    const teachers = [], students = [];
+
+    rows.forEach(r => {
+      const name = nameKey ? (r[nameKey] || '') : '';
+      const identity = identityKey ? (r[identityKey] || '') : '';
+
+      if (identity.includes('參展') && identity.includes('教師')) { exhibitTeacher++; teachers.push({ name, identity }); }
+      else if (identity.includes('參展') && identity.includes('學生')) { exhibitStudent++; students.push({ name, identity }); }
+      else if (identity.includes('觀摩') && identity.includes('教師')) { obsTeacher++; teachers.push({ name, identity }); }
+      else if (identity.includes('觀摩') && identity.includes('學生')) { obsStudent++; students.push({ name, identity }); }
+      else if (identity.includes('觀摩') && identity.includes('家長')) { obsParent++; }
+      else if (identity.includes('帶隊')) { teachers.push({ name, identity }); }
+    });
+
+    document.getElementById('s-exhibit-teacher').textContent = exhibitTeacher;
+    document.getElementById('s-exhibit-student').textContent = exhibitStudent;
+    document.getElementById('s-obs-teacher').textContent = obsTeacher;
+    document.getElementById('s-obs-student').textContent = obsStudent;
+    document.getElementById('s-obs-parent').textContent = obsParent;
+
+    const renderList = (list, el) => {
+      if (list.length === 0) { el.innerHTML = '<div class="empty">尚無報名資料</div>'; return; }
+      el.innerHTML = list.map(p => `
+        <div class="entry-card">
+          <div class="entry-identity">${p.identity || '—'}</div>
+          <div class="entry-name">${maskName(p.name) || '（未填姓名）'}</div>
+        </div>`).join('');
+    };
+
+    renderList(teachers, document.getElementById('teacher-list'));
+    renderList(students, document.getElementById('student-list'));
+
+  } catch(e) {
+    const msg = `<div class="error-msg">無法載入資料，請確認試算表已公開分享。(${e.message})</div>`;
+    document.getElementById('teacher-list').innerHTML = msg;
+    document.getElementById('student-list').innerHTML = msg;
+  }
+}
+
+loadData();
+</script>
+</body>
+</html>
