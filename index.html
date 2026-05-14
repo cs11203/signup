@@ -640,6 +640,11 @@ function maskName(name) {
   if (n.length === 2) return n[0] + '〇';
   return n[0] + '〇'.repeat(n.length - 2) + n[n.length - 1];
 }
+// 處理多人姓名（空白、逗號、頓號分隔）
+function maskNames(str) {
+  if (!str || !str.trim()) return '—';
+  return str.split(/[\s,，、]+/).filter(s => s.trim()).map(maskName).join('、');
+}
 
 /* ── Google Sheets ── */
 const SHEET_ID = '1PWYrF8dudesvDoDBhIOUFt1dNPNOZcvo9bH2R6-bPZs';
@@ -686,7 +691,7 @@ function renderSection(rows, type) {
       const name = (r[k] || '').trim();
       return name ? `<span class="badge ${badgeClass}">${maskName(name)}</span>` : '';
     }).join('');
-    const teacher = teacherKey ? maskName(r[teacherKey] || '') || '—' : '—';
+    const teacher = teacherKey ? maskNames(r[teacherKey] || '') : '—';
     return `<div class="entry-card">
       <div class="entry-plan">${i + 1}. ${plan}</div>
       ${time ? `<div class="entry-time">${time}</div>` : ''}

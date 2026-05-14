@@ -480,6 +480,10 @@ function maskName(name) {
   if (n.length === 2) return n[0] + '〇';
   return n[0] + '〇'.repeat(n.length - 2) + n[n.length - 1];
 }
+function maskNames(str) {
+  if (!str || !str.trim()) return '—';
+  return str.split(/[\s,，、]+/).filter(s => s.trim()).map(maskName).join('、');
+}
 
 /* ── Google Sheets ── */
 const SHEET_ID = '1PWYrF8dudesvDoDBhIOUFt1dNPNOZcvo9bH2R6-bPZs';
