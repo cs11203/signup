@@ -679,17 +679,21 @@ function renderSection(rows, type) {
   const badgeClass = type === 'poster' ? 'badge-poster' : 'badge-talk';
   if (rows.length === 0) return '<div class="empty">尚無報名資料</div>';
   const sample = rows[0];
-  // 只抓「組員」相關的姓名欄，排除含「教師」或「老師」的欄位
   const nameKeys = Object.keys(sample).filter(k => k.includes('姓名') && !k.includes('教師') && !k.includes('老師'));
+  const authKeys = Object.keys(sample).filter(k => k.includes('授權同意書'));
   const planKey = Object.keys(sample).find(k => k.includes('計畫')) || '';
   const teacherKey = Object.keys(sample).find(k => k.includes('教師') || k.includes('老師')) || '';
   const timeKey = Object.keys(sample).find(k => k.includes('時間') || k.toLowerCase().includes('timestamp')) || '';
   return rows.map((r, i) => {
     const plan = planKey ? (r[planKey] || '（未填計畫名稱）') : '（未填）';
     const time = timeKey ? r[timeKey] : '';
-    const members = nameKeys.map(k => {
+    const members = nameKeys.map((k, idx) => {
       const name = (r[k] || '').trim();
-      return name ? `<span class="badge ${badgeClass}">${maskName(name)}</span>` : '';
+      if (!name) return '';
+      const authKey = authKeys[idx] || '';
+      const authVal = authKey ? (r[authKey] || '').trim().toUpperCase() : '';
+      const authIcon = authVal === 'Y' ? ' <span title="已繳授權同意書" style="color:#0F6E56;">✅</span>' : ' <span title="未繳授權同意書" style="color:#ccc;">⬜</span>';
+      return `<span class="badge ${badgeClass}">${maskName(name)}${authIcon}</span>`;
     }).join('');
     const teacher = teacherKey ? maskNames(r[teacherKey] || '') : '—';
     return `<div class="entry-card">
