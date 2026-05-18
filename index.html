@@ -553,7 +553,11 @@ a:hover { text-decoration: underline; }
       <div class="stat"><div class="stat-label">海報組 組數</div><div class="stat-value" id="p-total">—</div></div>
       <div class="stat"><div class="stat-label">短講組 組數</div><div class="stat-value" id="t-total">—</div></div>
     </div>
-    <div style="text-align:right;margin-bottom:14px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+      <div style="font-size:13px;color:var(--text-muted);">
+        <span style="margin-right:12px;">✅ 已繳授權同意書</span>
+        <span style="color:#ccc;">⬜</span><span style="margin-left:4px;">未繳</span>
+      </div>
       <button class="btn-refresh" onclick="loadAll()">重新整理</button>
     </div>
     <div class="two-col">
