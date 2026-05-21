@@ -323,6 +323,12 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
         <div class="score-label">請給予 1 – 10 分的評分：</div>
         <div class="score-buttons" id="score-buttons"></div>
         <div class="score-current" id="score-current">尚未評分</div>
+        <div style="margin-bottom:16px;">
+          <label style="font-size:14px;color:var(--text-muted);display:block;margin-bottom:6px;">評語 <span style="color:var(--text-faint);font-size:12px;">（選填）</span></label>
+          <textarea id="comment-input" rows="3" placeholder="可輸入對此作品的評語或建議…"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:15px;font-family:'Noto Sans TC',sans-serif;color:var(--text);background:var(--bg);resize:vertical;outline:none;line-height:1.6;"
+            onfocus="this.style.borderColor='#185FA5'" onblur="this.style.borderColor='var(--border)'"></textarea>
+        </div>
         <div class="nav-buttons">
           <button class="btn-nav" id="btn-prev" onclick="prevGroup()">← 上一組</button>
           <button class="btn-nav primary" id="btn-next" onclick="nextGroup()">下一組 →</button>
@@ -404,7 +410,8 @@ const SHEET_NAME = 'Sheet1'; // 試算表分頁名稱
 // ── 狀態 ──
 let judgeName = '';
 let currentIndex = 0;
-let scores = {}; // { groupId: score }
+let scores = {};
+let comments = {}; // { groupId: comment }
 let zoomed = false;
 
 // ── 登入 ──
@@ -467,6 +474,9 @@ function renderGroup() {
     ? `目前評分：<strong>${scores[g.id]} 分</strong>`
     : '尚未評分';
 
+  // 還原評語
+  document.getElementById('comment-input').value = comments[g.id] || '';
+
   // 導航按鈕
   document.getElementById('btn-prev').disabled = currentIndex === 0;
   document.getElementById('btn-next').style.display = currentIndex < GROUPS.length - 1 ? 'block' : 'none';
@@ -481,11 +491,20 @@ function selectScore(s) {
   renderGroup();
 }
 
+function saveComment() {
+  const g = GROUPS[currentIndex];
+  const val = document.getElementById('comment-input').value.trim();
+  if (val) comments[g.id] = val;
+  else delete comments[g.id];
+}
+
 function prevGroup() {
+  saveComment();
   if (currentIndex > 0) { currentIndex--; renderGroup(); scrollToTop(); }
 }
 
 function nextGroup() {
+  saveComment();
   if (currentIndex < GROUPS.length - 1) { currentIndex++; renderGroup(); scrollToTop(); }
 }
 
@@ -540,6 +559,7 @@ function jumpTo(idx) {
 
 // ── 送出確認 ──
 function showConfirm() {
+  saveComment();
   const scored = Object.keys(scores).length;
   const total = GROUPS.length;
   const unscored = total - scored;
@@ -563,7 +583,8 @@ async function submitAll() {
   const now = new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
   const rows = Object.entries(scores).map(([groupId, score]) => {
     const g = GROUPS.find(g => g.id === parseInt(groupId));
-    return [now, judgeName, groupId, g ? g.title : '', score];
+    const comment = comments[parseInt(groupId)] || '';
+    return [now, judgeName, groupId, g ? g.title : '', score, comment];
   });
 
   // 使用 Google Apps Script Web App 送出
