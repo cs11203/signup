@@ -99,14 +99,19 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
 .poster-area {
   background: #f0efeb; border-bottom: 1px solid var(--border);
   min-height: 320px; display: flex; align-items: center; justify-content: center;
-  position: relative; overflow: hidden; cursor: zoom-in;
+  position: relative; overflow: auto; cursor: zoom-in;
+  max-height: 600px;
 }
 .poster-area img {
-  max-width: 100%; max-height: 500px; object-fit: contain;
-  display: block; transition: transform 0.2s;
+  max-width: 100%; object-fit: contain;
+  display: block; transition: max-width 0.2s, max-height 0.2s;
 }
-.poster-area.zoomed { cursor: zoom-out; }
-.poster-area.zoomed img { max-height: none; max-width: none; width: 100%; }
+.poster-area.zoomed {
+  cursor: grab; max-height: 80vh;
+  align-items: flex-start; justify-content: flex-start;
+}
+.poster-area.zoomed:active { cursor: grabbing; }
+.poster-area.zoomed img { max-width: none; width: 200%; }
 .poster-placeholder {
   text-align: center; padding: 48px 24px; color: var(--text-faint);
 }
@@ -338,39 +343,39 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
 <script>
 // ── 參賽組資料（圖片連結請之後填入）──
 const GROUPS = [
-  { id: 1, title: '韓國與英國的飲酒文化差異', members: '王映月、周倢亘、林晏丞', teacher: '許芷菱 謝玉玲', image: 'https://drive.google.com/thumbnail?id=1DNFkHMuZ5fOFnhfx0DnqtsrUQRRGlkWg&sz=w1200' },
-  { id: 2, title: '離開也是一種勇氣-以安寧治療和病人自主權為例', members: '劉芷伶、沈妤蓁、陳曉卉', teacher: '謝玉鈴 許芷菱', image: 'https://drive.google.com/thumbnail?id=13Yvx2FkmVzDHhs0hqIOjQ7UFHRpBRglh&sz=w1200' },
-  { id: 3, title: '聖教序臨摹誌', members: '林珮慈', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1dfHaQAi_p-kjtXslfvBKBZwPSmeFZLXz&sz=w1200' },
-  { id: 4, title: '機不可失，失之我命', members: '林准萱、陳凱芃、黃奕茹', teacher: '許芷菱 謝玉鈴', image: 'https://drive.google.com/thumbnail?id=1BawNvjSQVXaetdECqIFKt9kLvBEQH653&sz=w1200' },
-  { id: 5, title: '《如果今天變成貓，我能安全活下來嗎?》', members: '簡詩穎', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1YjR7ZtcH_93New_iFojfaW0g2IVgDQ-T&sz=w1200' },
-  { id: 6, title: '《甜點盲盒黏土設計製作》', members: '陳柚庭', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1baQAddQgww55gC1GbWaahW9vVO3xkIbX&sz=w1200' },
-  { id: 7, title: '粉彩的色彩探索', members: '賴宜芳', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1gPNJrjggdhKxWjv_86bpjgEvyZcQelFG&sz=w1200' },
-  { id: 8, title: '小燈泡事件探討死刑存廢-以《我們與惡的距離》為例', members: '黃冠禎、蕭羽軒、賴峻丞', teacher: '謝玉玲、許芷菱', image: 'https://drive.google.com/thumbnail?id=1xKRUtHatifr3gkLolg5uf1Xn3NRdVfn9&sz=w1200' },
-  { id: 9, title: '高中生對漫畫類型偏好之分析-以竹山高中為例', members: '許家毓、鄭芷婕、鄭凡盈', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=1jiZQyiZyb6HjTH-V2xOIP-WOznp1Dqdh&sz=w1200' },
-  { id: 10, title: '《紙上魔法師：摺疊間的微縮劇場》', members: '陳宣郁', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1wfH5-WZvYWSDDO0kJlaY7zcoasOchu75&sz=w1200' },
-  { id: 11, title: '一戰二戰的差別', members: '簡全宏、賴子凱、林致霆', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=1JHkVJFrIQekPOtIfLUeByMs6WhohuSSC&sz=w1200' },
-  { id: 12, title: '讓心被治癒—Line貼圖創作', members: '林莞翎、蔡沛芹', teacher: '廖燭瑄', image: 'https://drive.google.com/thumbnail?id=1QbMij6j2GVracNOaslM6fPV2ZUGzCOh5&sz=w1200' },
-  { id: 13, title: '左右為「男」：歌德風奇幻小說創作', members: '陳喬禕、邱芸萱', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=1mVovBMgZ0Wk0LcdeddyflCQx_e-cic66&sz=w1200' },
-  { id: 14, title: '環保紙吸管之天然塗料防水性研究', members: '徐湘甯、陳威丞、陳諺柏', teacher: '陳映辛', image: 'https://drive.google.com/thumbnail?id=1pptLywQsPmSDTjcY_TTXq1TJX_XvrYic&sz=w1200' },
-  { id: 15, title: '研究反社會人格之行為：以張文和鄭捷為例', members: '王馨瑩、邱郁芸、吳俊佑', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=1pWrvhAo8vId2niLk9xFHyJIEKvb6iNkb&sz=w1200' },
-  { id: 16, title: '書包不是健身器材 以生物力學探討書包重量與背負方式對高中生生理健康的影響', members: '李甜萱、李蕙宇、張子琪', teacher: '劉恩瑜', image: 'https://drive.google.com/thumbnail?id=1rB-ZwEw698VoQ1Y23nd-r8zI9x_PKGNQ&sz=w1200' },
-  { id: 17, title: '在賭場中保持冷靜', members: '李兆閎、林業宏、曾偉嘉', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=1eoUeGeB4Sz9Ddtg2CktzazewLaJDCqfh&sz=w1200' },
-  { id: 18, title: '光影舞台：視覺設計與情緒塑造', members: '張邵臻', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1JQCb3mJ0z6ntSlFKPS9Pbk8CYuMEiKoE&sz=w1200' },
-  { id: 19, title: '台灣與以色列部隊訓練制度之比較研究', members: '林旻萱、林苡彣', teacher: '林宛蓉 余芷瑄', image: 'https://drive.google.com/thumbnail?id=1M3pF29OGKKwEqVhmehJ08vCBouAfVd1Z&sz=w1200' },
-  { id: 20, title: '竹山高中學生受同儕影響、社會認同的自我歸屬狀況', members: '江雨穗、詹釉甯、游竣皓', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=1YJ23UWVxmdKKh9m1hXtK3MjxDk_CwNwb&sz=w1200' },
-  { id: 21, title: '築夢', members: '黃湘姈', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=10pZQHQWf476wfz1JlQKiBc168wlApwmI&sz=w1200' },
-  { id: 22, title: '動出好心境', members: '黃妍熏、陳冠伃', teacher: '余芷萱', image: 'https://drive.google.com/thumbnail?id=1whZd7fbG23unQHbRunkLF9gyYdemjbvd&sz=w1200' },
-  { id: 23, title: '原又贏！贏在哪？——從設計與行銷探討高營收關鍵', members: '許晅綺、陳禹璇、陳梓嫻', teacher: '蘇柏慈', image: 'https://drive.google.com/thumbnail?id=1KgLwrU9mmBKj_EcK6P3Yj8GMrZh_D60b&sz=w1200' },
-  { id: 24, title: '流行文化羊群效應-以Labubu為例', members: '莊政穎、林禹呈、劉善依', teacher: '蘇柏慈', image: 'https://drive.google.com/thumbnail?id=1wi9ZvtV92Hs7arVakOSV2nDYeGK9Yyk_&sz=w1200' },
-  { id: 25, title: '學習第二語言在學習和職場上發展的重要性', members: '林姿妍、柯雅筠、劉佳欣', teacher: '蘇柏慈', image: 'https://drive.google.com/thumbnail?id=1HOCKi4ySIZnxbENNm1f5npsJ9VApSHdP&sz=w1200' },
-  { id: 26, title: '影響竹山高中消費者在7-11與全家便利商店選擇之因素探討', members: '劉芊麗、林芊毓、鍾倚綸', teacher: '蘇柏慈', image: 'https://drive.google.com/thumbnail?id=1hrOeiF5XFJzJ5U-pgW-8jEFXEdaspqLg&sz=w1200' },
-  { id: 27, title: '快時尚的高中生的快時尚衣物消費選擇與永續意識', members: '洪湘虹、陳永婕、黃子軒', teacher: '蘇柏慈', image: 'https://drive.google.com/thumbnail?id=1JYvZYbsBn5QdSmIzZFRom16V0jxln5OP&sz=w1200' },
-  { id: 28, title: '運用自如—AI使用經驗分析', members: '蕭竣凱', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=19NdkrVdNgKWp4PoFA3FYGQbf6p6wcO0S&sz=w1200' },
-  { id: 29, title: '探討台灣夜市的文化- 逢甲夜市跟竹山夜市的比較', members: '張瑜芮、陳星汝、黃柏熏', teacher: '蘇柏慈', image: 'https://drive.google.com/thumbnail?id=1Y5XY5jDBRp4mcZYEY7M0pGEGsH8_tKUn&sz=w1200' },
-  { id: 30, title: '月桃的秘密', members: '林佳錡、張芷榕、羅子傑', teacher: '陳映辛 林宜駿', image: 'https://drive.google.com/thumbnail?id=13nbcxN4D3VPaf1Lze0nmPhmyb9aF6GJW&sz=w1200' },
-  { id: 31, title: '讓手繪動起來', members: '林美芯', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1NVSrRqgL8xAplYuE5fqqUVmA6_npDlkI&sz=w1200' },
-  { id: 32, title: '台灣媽祖信仰發展與經營-以竹山連興宮為例', members: '廖方得、陳建翰、余健豪', teacher: '蘇柏慈', image: 'https://drive.google.com/thumbnail?id=17d3hCJayTvDjenDDcE-L73Q6FS0QyU7D&sz=w1200' },
-  { id: 33, title: 'Amazing Essential oils', members: '連芳岑、陳冠諭、張家瑜', teacher: '陳映辛、楊瑀婕', image: 'https://drive.google.com/thumbnail?id=1OoI8X5kHS3At-WvbiDJLloU30avnVSe0&sz=w1200' },
+  { id: 1, title: '韓國與英國的飲酒文化差異', members: '王映月、周倢亘、林晏丞', teacher: '許芷菱 謝玉玲', image: 'https://drive.google.com/thumbnail?id=1DNFkHMuZ5fOFnhfx0DnqtsrUQRRGlkWg&sz=w2400' },
+  { id: 2, title: '離開也是一種勇氣-以安寧治療和病人自主權為例', members: '劉芷伶、沈妤蓁、陳曉卉', teacher: '謝玉鈴 許芷菱', image: 'https://drive.google.com/thumbnail?id=13Yvx2FkmVzDHhs0hqIOjQ7UFHRpBRglh&sz=w2400' },
+  { id: 3, title: '聖教序臨摹誌', members: '林珮慈', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1dfHaQAi_p-kjtXslfvBKBZwPSmeFZLXz&sz=w2400' },
+  { id: 4, title: '機不可失，失之我命', members: '林准萱、陳凱芃、黃奕茹', teacher: '許芷菱 謝玉鈴', image: 'https://drive.google.com/thumbnail?id=1BawNvjSQVXaetdECqIFKt9kLvBEQH653&sz=w2400' },
+  { id: 5, title: '《如果今天變成貓，我能安全活下來嗎?》', members: '簡詩穎', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1YjR7ZtcH_93New_iFojfaW0g2IVgDQ-T&sz=w2400' },
+  { id: 6, title: '《甜點盲盒黏土設計製作》', members: '陳柚庭', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1baQAddQgww55gC1GbWaahW9vVO3xkIbX&sz=w2400' },
+  { id: 7, title: '粉彩的色彩探索', members: '賴宜芳', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1gPNJrjggdhKxWjv_86bpjgEvyZcQelFG&sz=w2400' },
+  { id: 8, title: '小燈泡事件探討死刑存廢-以《我們與惡的距離》為例', members: '黃冠禎、蕭羽軒、賴峻丞', teacher: '謝玉玲、許芷菱', image: 'https://drive.google.com/thumbnail?id=1xKRUtHatifr3gkLolg5uf1Xn3NRdVfn9&sz=w2400' },
+  { id: 9, title: '高中生對漫畫類型偏好之分析-以竹山高中為例', members: '許家毓、鄭芷婕、鄭凡盈', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=1jiZQyiZyb6HjTH-V2xOIP-WOznp1Dqdh&sz=w2400' },
+  { id: 10, title: '《紙上魔法師：摺疊間的微縮劇場》', members: '陳宣郁', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1wfH5-WZvYWSDDO0kJlaY7zcoasOchu75&sz=w2400' },
+  { id: 11, title: '一戰二戰的差別', members: '簡全宏、賴子凱、林致霆', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=1JHkVJFrIQekPOtIfLUeByMs6WhohuSSC&sz=w2400' },
+  { id: 12, title: '讓心被治癒—Line貼圖創作', members: '林莞翎、蔡沛芹', teacher: '廖燭瑄', image: 'https://drive.google.com/thumbnail?id=1QbMij6j2GVracNOaslM6fPV2ZUGzCOh5&sz=w2400' },
+  { id: 13, title: '左右為「男」：歌德風奇幻小說創作', members: '陳喬禕、邱芸萱', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=1mVovBMgZ0Wk0LcdeddyflCQx_e-cic66&sz=w2400' },
+  { id: 14, title: '環保紙吸管之天然塗料防水性研究', members: '徐湘甯、陳威丞、陳諺柏', teacher: '陳映辛', image: 'https://drive.google.com/thumbnail?id=1pptLywQsPmSDTjcY_TTXq1TJX_XvrYic&sz=w2400' },
+  { id: 15, title: '研究反社會人格之行為：以張文和鄭捷為例', members: '王馨瑩、邱郁芸、吳俊佑', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=1pWrvhAo8vId2niLk9xFHyJIEKvb6iNkb&sz=w2400' },
+  { id: 16, title: '書包不是健身器材 以生物力學探討書包重量與背負方式對高中生生理健康的影響', members: '李甜萱、李蕙宇、張子琪', teacher: '劉恩瑜', image: 'https://drive.google.com/thumbnail?id=1rB-ZwEw698VoQ1Y23nd-r8zI9x_PKGNQ&sz=w2400' },
+  { id: 17, title: '在賭場中保持冷靜', members: '李兆閎、林業宏、曾偉嘉', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=1eoUeGeB4Sz9Ddtg2CktzazewLaJDCqfh&sz=w2400' },
+  { id: 18, title: '光影舞台：視覺設計與情緒塑造', members: '張邵臻', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1JQCb3mJ0z6ntSlFKPS9Pbk8CYuMEiKoE&sz=w2400' },
+  { id: 19, title: '台灣與以色列部隊訓練制度之比較研究', members: '林旻萱、林苡彣', teacher: '林宛蓉 余芷瑄', image: 'https://drive.google.com/thumbnail?id=1M3pF29OGKKwEqVhmehJ08vCBouAfVd1Z&sz=w2400' },
+  { id: 20, title: '竹山高中學生受同儕影響、社會認同的自我歸屬狀況', members: '江雨穗、詹釉甯、游竣皓', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=1YJ23UWVxmdKKh9m1hXtK3MjxDk_CwNwb&sz=w2400' },
+  { id: 21, title: '築夢', members: '黃湘姈', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=10pZQHQWf476wfz1JlQKiBc168wlApwmI&sz=w2400' },
+  { id: 22, title: '動出好心境', members: '黃妍熏、陳冠伃', teacher: '余芷萱', image: 'https://drive.google.com/thumbnail?id=1whZd7fbG23unQHbRunkLF9gyYdemjbvd&sz=w2400' },
+  { id: 23, title: '原又贏！贏在哪？——從設計與行銷探討高營收關鍵', members: '許晅綺、陳禹璇、陳梓嫻', teacher: '蘇柏慈', image: 'https://drive.google.com/thumbnail?id=1KgLwrU9mmBKj_EcK6P3Yj8GMrZh_D60b&sz=w2400' },
+  { id: 24, title: '流行文化羊群效應-以Labubu為例', members: '莊政穎、林禹呈、劉善依', teacher: '蘇柏慈', image: 'https://drive.google.com/thumbnail?id=1wi9ZvtV92Hs7arVakOSV2nDYeGK9Yyk_&sz=w2400' },
+  { id: 25, title: '學習第二語言在學習和職場上發展的重要性', members: '林姿妍、柯雅筠、劉佳欣', teacher: '蘇柏慈', image: 'https://drive.google.com/thumbnail?id=1HOCKi4ySIZnxbENNm1f5npsJ9VApSHdP&sz=w2400' },
+  { id: 26, title: '影響竹山高中消費者在7-11與全家便利商店選擇之因素探討', members: '劉芊麗、林芊毓、鍾倚綸', teacher: '蘇柏慈', image: 'https://drive.google.com/thumbnail?id=1hrOeiF5XFJzJ5U-pgW-8jEFXEdaspqLg&sz=w2400' },
+  { id: 27, title: '快時尚的高中生的快時尚衣物消費選擇與永續意識', members: '洪湘虹、陳永婕、黃子軒', teacher: '蘇柏慈', image: 'https://drive.google.com/thumbnail?id=1JYvZYbsBn5QdSmIzZFRom16V0jxln5OP&sz=w2400' },
+  { id: 28, title: '運用自如—AI使用經驗分析', members: '蕭竣凱', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=19NdkrVdNgKWp4PoFA3FYGQbf6p6wcO0S&sz=w2400' },
+  { id: 29, title: '探討台灣夜市的文化- 逢甲夜市跟竹山夜市的比較', members: '張瑜芮、陳星汝、黃柏熏', teacher: '蘇柏慈', image: 'https://drive.google.com/thumbnail?id=1Y5XY5jDBRp4mcZYEY7M0pGEGsH8_tKUn&sz=w2400' },
+  { id: 30, title: '月桃的秘密', members: '林佳錡、張芷榕、羅子傑', teacher: '陳映辛 林宜駿', image: 'https://drive.google.com/thumbnail?id=13nbcxN4D3VPaf1Lze0nmPhmyb9aF6GJW&sz=w2400' },
+  { id: 31, title: '讓手繪動起來', members: '林美芯', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1NVSrRqgL8xAplYuE5fqqUVmA6_npDlkI&sz=w2400' },
+  { id: 32, title: '台灣媽祖信仰發展與經營-以竹山連興宮為例', members: '廖方得、陳建翰、余健豪', teacher: '蘇柏慈', image: 'https://drive.google.com/thumbnail?id=17d3hCJayTvDjenDDcE-L73Q6FS0QyU7D&sz=w2400' },
+  { id: 33, title: 'Amazing Essential oils', members: '連芳岑、陳冠諭、張家瑜', teacher: '陳映辛、楊瑀婕', image: 'https://drive.google.com/thumbnail?id=1OoI8X5kHS3At-WvbiDJLloU30avnVSe0&sz=w2400' },
 ];
 
 // ── Google Sheets 設定 ──
