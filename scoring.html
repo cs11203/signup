@@ -553,15 +553,16 @@ function updateProgress() {
 async function saveRow(groupId) {
   const g = GROUPS.find(g => g.id === groupId);
   if (!g || scores[groupId] === undefined) return;
-  const now = new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
   const comment = comments[groupId] || '';
-  const row = [now, judgeName, groupId, g.title, scores[groupId], comment];
+  const params = new URLSearchParams({
+    judge: judgeName,
+    group: groupId,
+    title: g.title,
+    score: scores[groupId],
+    comment: comment
+  });
   try {
-    await fetch(SCRIPT_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ rows: [row] })
-    });
+    await fetch(SCRIPT_URL + '?' + params.toString(), { method: 'GET', mode: 'no-cors' });
   } catch(e) { console.warn('送出失敗', e); }
 }
 
@@ -677,22 +678,21 @@ async function submitAll() {
   document.getElementById('btn-submit').textContent = '送出中...';
 
   const now = new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
-  const rows = Object.entries(scores).map(([groupId, score]) => {
+  const promises = Object.entries(scores).map(([groupId, score]) => {
     const g = GROUPS.find(g => g.id === parseInt(groupId));
     const comment = comments[parseInt(groupId)] || '';
-    return [now, judgeName, groupId, g ? g.title : '', score, comment];
+    const params = new URLSearchParams({
+      judge: judgeName,
+      group: groupId,
+      title: g ? g.title : '',
+      score: score,
+      comment: comment
+    });
+    return fetch(SCRIPT_URL + '?' + params.toString(), { method: 'GET', mode: 'no-cors' });
   });
 
-  // 使用 Google Apps Script Web App 送出
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwfVW427XkDHmpQQa15qV2w0iIIVxhy9cHCVY5tpHRS790RQapRRhgCtrI0kGwf4Rp0/exec';
-
   try {
-    await fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ rows })
-    });
+    await Promise.all(promises);
     clearLocal();
     showSuccess();
   } catch(e) {
