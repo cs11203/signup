@@ -520,7 +520,34 @@ function updateProgress() {
   document.getElementById('progress-bar').style.width = `${(scored / total) * 100}%`;
 }
 
-// ── 縮放控制 ──
+// ── 拖曳捲動 ──
+const posterArea = document.getElementById('poster-area');
+let isDragging = false, startX, startY, scrollLeft, scrollTop;
+
+posterArea.addEventListener('mousedown', e => {
+  isDragging = true;
+  startX = e.pageX - posterArea.offsetLeft;
+  startY = e.pageY - posterArea.offsetTop;
+  scrollLeft = posterArea.scrollLeft;
+  scrollTop = posterArea.scrollTop;
+  posterArea.style.cursor = 'grabbing';
+  e.preventDefault();
+});
+posterArea.addEventListener('mouseleave', () => {
+  isDragging = false;
+  posterArea.style.cursor = 'grab';
+});
+posterArea.addEventListener('mouseup', () => {
+  isDragging = false;
+  posterArea.style.cursor = 'grab';
+});
+posterArea.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  const x = e.pageX - posterArea.offsetLeft;
+  const y = e.pageY - posterArea.offsetTop;
+  posterArea.scrollLeft = scrollLeft - (x - startX);
+  posterArea.scrollTop = scrollTop - (y - startY);
+});
 let zoomLevel = 100;
 function updateZoom() {
   const img = document.getElementById('poster-area').querySelector('img');
