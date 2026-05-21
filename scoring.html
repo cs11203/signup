@@ -305,8 +305,8 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
 <div id="login-screen">
   <div class="login-card">
     <h1>114-2 自主學習校內賽</h1>
-    <p>海報組評分系統</p>
-    <select id="judge-select">
+    <p>海報組評分系統｜共 33 篇</p>
+    <select id="judge-select" onchange="onJudgeChange()">
       <option value="">── 請選擇您的姓名 ──</option>
       <option>劉恩瑜</option>
       <option>謝玉鈴</option>
@@ -320,6 +320,7 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
       <option>楊家豪</option>
       <option>馮松林</option>
     </select>
+    <div id="judge-progress" style="font-size:14px;color:var(--text-muted);margin-bottom:14px;min-height:22px;text-align:center;"></div>
     <button class="btn-primary" id="login-btn" onclick="login()" disabled>開始評分</button>
   </div>
 </div>
@@ -468,16 +469,45 @@ let comments = {}; // { groupId: comment }
 let zoomed = false;
 
 // ── 登入 ──
+const SCORE_GID = '0';
+
 document.getElementById('judge-select').addEventListener('change', function() {
   document.getElementById('login-btn').disabled = !this.value;
 });
+
+async function onJudgeChange() {
+  const sel = document.getElementById('judge-select');
+  const name = sel.value;
+  document.getElementById('login-btn').disabled = !name;
+  const el = document.getElementById('judge-progress');
+  if (!name) { el.textContent = ''; return; }
+  el.textContent = '讀取評分進度中...';
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${SCORE_GID}`;
+    const raw = await fetch(url).then(r => r.text());
+    const json = JSON.parse(raw.replace(/^[^{]*/,'').replace(/[^}]*$/,''));
+    const cols = json.table.cols.map(c => c.label);
+    const judgeCol = cols.indexOf('評審姓名');
+    const rows = json.table.rows || [];
+    const scored = rows.filter(r => r.c[judgeCol] && r.c[judgeCol].v === name).length;
+    const remaining = 33 - scored;
+    if (remaining === 0) {
+      el.innerHTML = `✅ 已完成全部 33 篇評分`;
+      el.style.color = '#0F6E56';
+    } else {
+      el.innerHTML = `需評 33 篇，已評 <strong>${scored}</strong> 篇，尚有 <strong style="color:#C0392B">${remaining}</strong> 篇未評`;
+      el.style.color = 'var(--text-muted)';
+    }
+  } catch(e) {
+    el.textContent = '（無法讀取進度）';
+  }
+}
 
 function login() {
   const sel = document.getElementById('judge-select');
   if (!sel.value) return;
   judgeName = sel.value;
 
-  // 檢查是否有相同評審的未完成紀錄
   const savedJudge = localStorage.getItem('scoring_judge');
   if (savedJudge === judgeName && localStorage.getItem('scoring_scores')) {
     if (confirm(`發現您（${judgeName}）上次未完成的評分紀錄，是否繼續？`)) {
