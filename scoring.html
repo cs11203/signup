@@ -82,7 +82,7 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
 .progress-bar { height: 4px; background: var(--blue); transition: width 0.3s; }
 
 /* ── 卡片區 ── */
-.card-viewport { padding: 24px 20px 40px; max-width: 860px; margin: 0 auto; }
+.card-viewport { padding: 24px 20px 40px; max-width: 1100px; margin: 0 auto; }
 
 .group-counter {
   text-align: center; font-size: 13px; color: var(--text-faint);
@@ -368,14 +368,14 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
 <script>
 // ── 參賽組資料（圖片連結請之後填入）──
 const GROUPS = [
-  { id: 1, title: '韓國與英國的飲酒文化差異', members: '王映月、周倢亘、林晏丞', teacher: '許芷菱 謝玉鈴', image: 'https://drive.google.com/thumbnail?id=1DNFkHMuZ5fOFnhfx0DnqtsrUQRRGlkWg&sz=w2400' },
+  { id: 1, title: '韓國與英國的飲酒文化差異', members: '王映月、周倢亘、林晏丞', teacher: '許芷菱 謝玉玲', image: 'https://drive.google.com/thumbnail?id=1DNFkHMuZ5fOFnhfx0DnqtsrUQRRGlkWg&sz=w2400' },
   { id: 2, title: '離開也是一種勇氣-以安寧治療和病人自主權為例', members: '劉芷伶、沈妤蓁、陳曉卉', teacher: '謝玉鈴 許芷菱', image: 'https://drive.google.com/thumbnail?id=13Yvx2FkmVzDHhs0hqIOjQ7UFHRpBRglh&sz=w2400' },
   { id: 3, title: '聖教序臨摹誌', members: '林珮慈', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1dfHaQAi_p-kjtXslfvBKBZwPSmeFZLXz&sz=w2400' },
   { id: 4, title: '機不可失，失之我命', members: '林准萱、陳凱芃、黃奕茹', teacher: '許芷菱 謝玉鈴', image: 'https://drive.google.com/thumbnail?id=1BawNvjSQVXaetdECqIFKt9kLvBEQH653&sz=w2400' },
   { id: 5, title: '《如果今天變成貓，我能安全活下來嗎?》', members: '簡詩穎', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1YjR7ZtcH_93New_iFojfaW0g2IVgDQ-T&sz=w2400' },
   { id: 6, title: '《甜點盲盒黏土設計製作》', members: '陳柚庭', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1baQAddQgww55gC1GbWaahW9vVO3xkIbX&sz=w2400' },
   { id: 7, title: '粉彩的色彩探索', members: '賴宜芳', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1gPNJrjggdhKxWjv_86bpjgEvyZcQelFG&sz=w2400' },
-  { id: 8, title: '小燈泡事件探討死刑存廢-以《我們與惡的距離》為例', members: '黃冠禎、蕭羽軒、賴峻丞', teacher: '謝玉鈴、許芷菱', image: 'https://drive.google.com/thumbnail?id=1xKRUtHatifr3gkLolg5uf1Xn3NRdVfn9&sz=w2400' },
+  { id: 8, title: '小燈泡事件探討死刑存廢-以《我們與惡的距離》為例', members: '黃冠禎、蕭羽軒、賴峻丞', teacher: '謝玉玲、許芷菱', image: 'https://drive.google.com/thumbnail?id=1xKRUtHatifr3gkLolg5uf1Xn3NRdVfn9&sz=w2400' },
   { id: 9, title: '高中生對漫畫類型偏好之分析-以竹山高中為例', members: '許家毓、鄭芷婕、鄭凡盈', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=1jiZQyiZyb6HjTH-V2xOIP-WOznp1Dqdh&sz=w2400' },
   { id: 10, title: '《紙上魔法師：摺疊間的微縮劇場》', members: '陳宣郁', teacher: '張巧靜', image: 'https://drive.google.com/thumbnail?id=1wfH5-WZvYWSDDO0kJlaY7zcoasOchu75&sz=w2400' },
   { id: 11, title: '一戰二戰的差別', members: '簡全宏、賴子凱、林致霆', teacher: '林玫芳、倪思萍', image: 'https://drive.google.com/thumbnail?id=1JHkVJFrIQekPOtIfLUeByMs6WhohuSSC&sz=w2400' },
