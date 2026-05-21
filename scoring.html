@@ -579,8 +579,8 @@ function selectScore(s) {
   const g = GROUPS[currentIndex];
   scores[g.id] = s;
   saveLocal();
-  saveRow(g.id);
   renderGroup();
+  sendToSheet(g.id);
 }
 
 function saveComment() {
@@ -597,9 +597,9 @@ function prevGroup() {
   if (currentIndex > 0) {
     currentIndex--;
     saveLocal();
-    saveRow(prevId);
     renderGroup();
     scrollToTop();
+    sendToSheet(prevId);
   }
 }
 
@@ -609,9 +609,9 @@ function nextGroup() {
   if (currentIndex < GROUPS.length - 1) {
     currentIndex++;
     saveLocal();
-    saveRow(prevId);
     renderGroup();
     scrollToTop();
+    sendToSheet(prevId);
   }
 }
 
@@ -627,8 +627,8 @@ function updateProgress() {
   document.getElementById('progress-bar').style.width = `${(scored / total) * 100}%`;
 }
 
-// ── 即時送出單筆（用 img ping 繞過 CORS）──
-function saveRow(groupId) {
+// ── 即時送出單筆（用 hidden iframe 繞過 CORS）──
+function sendToSheet(groupId) {
   const g = GROUPS.find(g => g.id === groupId);
   if (!g || scores[groupId] === undefined) return;
   const comment = comments[groupId] || '';
@@ -639,8 +639,28 @@ function saveRow(groupId) {
     score: String(scores[groupId]),
     comment: comment
   });
-  const img = new Image();
-  img.src = SCRIPT_URL + '?' + params.toString();
+  let iframe = document.getElementById('send-iframe');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.id = 'send-iframe';
+    iframe.name = 'send-iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
+  const form = document.createElement('form');
+  form.method = 'GET';
+  form.action = SCRIPT_URL;
+  form.target = 'send-iframe';
+  params.forEach((val, key) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = val;
+    form.appendChild(input);
+  });
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
 }
 
 // ── localStorage 備份與還原 ──
@@ -735,29 +755,21 @@ function hideConfirm() {
 // ── 送出至 Google Sheets ──
 function submitAll() {
   hideConfirm();
+  saveComment();
   document.getElementById('btn-submit').disabled = true;
   document.getElementById('btn-submit').textContent = '送出中...';
 
-  // 用 img ping 送出所有資料（不受 CORS 限制）
-  Object.entries(scores).forEach(([groupId, score]) => {
-    const g = GROUPS.find(g => g.id === parseInt(groupId));
-    const comment = comments[parseInt(groupId)] || '';
-    const params = new URLSearchParams({
-      judge: judgeName,
-      group: groupId,
-      title: g ? g.title : '',
-      score: String(score),
-      comment: comment
-    });
-    const img = new Image();
-    img.src = SCRIPT_URL + '?' + params.toString();
+  // 逐一送出所有評分
+  const entries = Object.entries(scores);
+  entries.forEach(([groupId, score]) => {
+    sendToSheet(parseInt(groupId));
   });
 
-  // 等 2 秒讓請求發出後顯示完成
+  // 等 3 秒讓所有 iframe 請求完成後顯示完成
   setTimeout(() => {
     clearLocal();
     showSuccess();
-  }, 2000);
+  }, 3000);
 }
 
 function showSuccess() {
