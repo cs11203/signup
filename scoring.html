@@ -423,6 +423,17 @@ function login() {
   const sel = document.getElementById('judge-select');
   if (!sel.value) return;
   judgeName = sel.value;
+
+  // 檢查是否有相同評審的未完成紀錄
+  const savedJudge = localStorage.getItem('scoring_judge');
+  if (savedJudge === judgeName && localStorage.getItem('scoring_scores')) {
+    if (confirm(`發現您（${judgeName}）上次未完成的評分紀錄，是否繼續？`)) {
+      loadLocal();
+    } else {
+      clearLocal();
+    }
+  }
+
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('scoring-screen').style.display = 'block';
   document.getElementById('judge-name-display').textContent = judgeName;
@@ -433,6 +444,7 @@ function login() {
 
 function logout() {
   if (!confirm('確定要離開？未送出的評分將不會儲存。')) return;
+  clearLocal();
   location.reload();
 }
 
@@ -488,6 +500,8 @@ function renderGroup() {
 function selectScore(s) {
   const g = GROUPS[currentIndex];
   scores[g.id] = s;
+  saveLocal();
+  saveRow(g.id);
   renderGroup();
 }
 
@@ -496,16 +510,31 @@ function saveComment() {
   const val = document.getElementById('comment-input').value.trim();
   if (val) comments[g.id] = val;
   else delete comments[g.id];
+  saveLocal();
 }
 
 function prevGroup() {
   saveComment();
-  if (currentIndex > 0) { currentIndex--; renderGroup(); scrollToTop(); }
+  const prevId = GROUPS[currentIndex].id;
+  if (currentIndex > 0) {
+    currentIndex--;
+    saveLocal();
+    saveRow(prevId);
+    renderGroup();
+    scrollToTop();
+  }
 }
 
 function nextGroup() {
   saveComment();
-  if (currentIndex < GROUPS.length - 1) { currentIndex++; renderGroup(); scrollToTop(); }
+  const prevId = GROUPS[currentIndex].id;
+  if (currentIndex < GROUPS.length - 1) {
+    currentIndex++;
+    saveLocal();
+    saveRow(prevId);
+    renderGroup();
+    scrollToTop();
+  }
 }
 
 function scrollToTop() {
@@ -520,7 +549,47 @@ function updateProgress() {
   document.getElementById('progress-bar').style.width = `${(scored / total) * 100}%`;
 }
 
-// ── 拖曳捲動 ──
+// ── 即時送出單筆 ──
+async function saveRow(groupId) {
+  const g = GROUPS.find(g => g.id === groupId);
+  if (!g || scores[groupId] === undefined) return;
+  const now = new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
+  const comment = comments[groupId] || '';
+  const row = [now, judgeName, groupId, g.title, scores[groupId], comment];
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rows: [row] })
+    });
+  } catch(e) { console.warn('送出失敗', e); }
+}
+
+// ── localStorage 備份與還原 ──
+function saveLocal() {
+  localStorage.setItem('scoring_judge', judgeName);
+  localStorage.setItem('scoring_scores', JSON.stringify(scores));
+  localStorage.setItem('scoring_comments', JSON.stringify(comments));
+  localStorage.setItem('scoring_index', currentIndex);
+}
+
+function loadLocal() {
+  const j = localStorage.getItem('scoring_judge');
+  const s = localStorage.getItem('scoring_scores');
+  const c = localStorage.getItem('scoring_comments');
+  const i = localStorage.getItem('scoring_index');
+  if (j) judgeName = j;
+  if (s) scores = JSON.parse(s);
+  if (c) comments = JSON.parse(c);
+  if (i) currentIndex = parseInt(i);
+}
+
+function clearLocal() {
+  localStorage.removeItem('scoring_judge');
+  localStorage.removeItem('scoring_scores');
+  localStorage.removeItem('scoring_comments');
+  localStorage.removeItem('scoring_index');
+}
 const posterArea = document.getElementById('poster-area');
 let isDragging = false, startX, startY, scrollLeft, scrollTop;
 
@@ -624,6 +693,7 @@ async function submitAll() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ rows })
     });
+    clearLocal();
     showSuccess();
   } catch(e) {
     alert('送出失敗，請通知楊老師。錯誤：' + e.message);
