@@ -340,7 +340,7 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
   <div class="scoring-layout">
     <!-- 左側導航欄 -->
     <div class="nav-sidebar" id="nav-sidebar">
-      <div class="nav-sidebar-title">題目列表</div>
+      <div class="nav-sidebar-title">組別列表</div>
       <div id="nav-list"></div>
     </div>
 
@@ -708,8 +708,9 @@ function zoomOut() { zoomLevel = Math.max(zoomLevel - 25, 50); updateZoom(); }
 // ── 跳至指定組別 ──
 
 function jumpTo(idx) {
+  saveComment();
   currentIndex = idx;
-  closeOverview();
+  saveLocal();
   renderGroup();
   scrollToTop();
 }
