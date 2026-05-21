@@ -96,22 +96,33 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
 }
 
 /* 海報展示區 */
-.poster-area {
+.poster-wrap {
   background: #f0efeb; border-bottom: 1px solid var(--border);
-  min-height: 320px; display: flex; align-items: center; justify-content: center;
-  position: relative; overflow: auto; cursor: zoom-in;
-  max-height: 600px;
+  position: relative;
 }
+.poster-controls {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 14px; background: rgba(255,255,255,0.9);
+  border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-muted);
+}
+.poster-controls button {
+  width: 28px; height: 28px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); background: var(--surface);
+  font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-family: 'Noto Sans TC', sans-serif; line-height: 1;
+}
+.poster-controls button:hover { background: var(--bg); }
+.zoom-label { min-width: 42px; text-align: center; font-weight: 500; color: var(--text); }
+.poster-area {
+  overflow: auto; max-height: 65vh; min-height: 280px;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 12px; cursor: grab;
+}
+.poster-area:active { cursor: grabbing; }
 .poster-area img {
-  max-width: 100%; object-fit: contain;
-  display: block; transition: max-width 0.2s, max-height 0.2s;
+  display: block; transform-origin: top center;
+  transition: width 0.2s; max-width: none;
 }
-.poster-area.zoomed {
-  cursor: grab; max-height: 80vh;
-  align-items: flex-start; justify-content: flex-start;
-}
-.poster-area.zoomed:active { cursor: grabbing; }
-.poster-area.zoomed img { max-width: none; width: 200%; }
 .poster-placeholder {
   text-align: center; padding: 48px 24px; color: var(--text-faint);
 }
@@ -289,8 +300,16 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
 
     <div class="scoring-card">
       <!-- 海報圖片 -->
-      <div class="poster-area" id="poster-area" onclick="toggleZoom()">
-        <div id="poster-content"></div>
+      <div class="poster-wrap">
+        <div class="poster-controls">
+          <button onclick="zoomOut()">−</button>
+          <span class="zoom-label" id="zoom-label">100%</span>
+          <button onclick="zoomIn()">＋</button>
+          <span style="margin-left:4px;">｜ 可捲動查看全貌</span>
+        </div>
+        <div class="poster-area" id="poster-area">
+          <div id="poster-content"></div>
+        </div>
       </div>
 
       <!-- 組別資訊 -->
@@ -422,12 +441,12 @@ function renderGroup() {
 
   // 海報圖片
   const posterArea = document.getElementById('poster-content');
+  zoomLevel = 100;
+  document.getElementById('zoom-label').textContent = '100%';
   if (g.image) {
-    posterArea.innerHTML = `<img src="${g.image}" alt="第${g.id}組海報" id="poster-img">`;
-    document.getElementById('poster-area').style.cursor = 'zoom-in';
+    posterArea.innerHTML = `<img src="${g.image}" alt="第${g.id}組海報" style="width:100%;display:block;" onload="this.style.width='100%'">`;
   } else {
     posterArea.innerHTML = `<div class="poster-placeholder"><div class="icon">🖼️</div><p>圖片待上傳</p></div>`;
-    document.getElementById('poster-area').style.cursor = 'default';
   }
   zoomed = false;
 
@@ -482,13 +501,16 @@ function updateProgress() {
   document.getElementById('progress-bar').style.width = `${(scored / total) * 100}%`;
 }
 
-// ── 放大圖片 ──
-function toggleZoom() {
-  const area = document.getElementById('poster-area');
-  if (!area.querySelector('img')) return;
-  zoomed = !zoomed;
-  area.classList.toggle('zoomed', zoomed);
+// ── 縮放控制 ──
+let zoomLevel = 100;
+function updateZoom() {
+  const img = document.getElementById('poster-area').querySelector('img');
+  if (!img) return;
+  img.style.width = zoomLevel + '%';
+  document.getElementById('zoom-label').textContent = zoomLevel + '%';
 }
+function zoomIn() { zoomLevel = Math.min(zoomLevel + 25, 300); updateZoom(); }
+function zoomOut() { zoomLevel = Math.max(zoomLevel - 25, 50); updateZoom(); }
 
 // ── 總覽 ──
 function openOverview() {
