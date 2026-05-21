@@ -567,14 +567,18 @@ async function saveRow(groupId) {
   const comment = comments[groupId] || '';
   const params = new URLSearchParams({
     judge: judgeName,
-    group: groupId,
+    group: String(groupId),
     title: g.title,
-    score: scores[groupId],
+    score: String(scores[groupId]),
     comment: comment
   });
   try {
-    await fetch(SCRIPT_URL + '?' + params.toString(), { method: 'GET', mode: 'no-cors' });
-  } catch(e) { console.warn('送出失敗', e); }
+    const res = await fetch(SCRIPT_URL + '?' + params.toString());
+    const data = await res.json();
+    console.log('送出成功', groupId, data);
+  } catch(e) {
+    console.warn('送出失敗', groupId, e);
+  }
 }
 
 // ── localStorage 備份與還原 ──
@@ -696,10 +700,10 @@ async function submitAll() {
       judge: judgeName,
       group: groupId,
       title: g ? g.title : '',
-      score: score,
+      score: String(score),
       comment: comment
     });
-    return fetch(SCRIPT_URL + '?' + params.toString(), { method: 'GET', mode: 'no-cors' });
+    return fetch(SCRIPT_URL + '?' + params.toString()).then(r => r.json());
   });
 
   try {
