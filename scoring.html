@@ -627,8 +627,8 @@ function updateProgress() {
   document.getElementById('progress-bar').style.width = `${(scored / total) * 100}%`;
 }
 
-// ── 即時送出單筆（用 hidden iframe 繞過 CORS）──
-function sendToSheet(groupId) {
+// ── 即時送出單筆（fetch，Apps Script 已加 CORS header）──
+async function sendToSheet(groupId) {
   const g = GROUPS.find(g => g.id === groupId);
   if (!g || scores[groupId] === undefined) return;
   const comment = comments[groupId] || '';
@@ -639,28 +639,13 @@ function sendToSheet(groupId) {
     score: String(scores[groupId]),
     comment: comment
   });
-  let iframe = document.getElementById('send-iframe');
-  if (!iframe) {
-    iframe = document.createElement('iframe');
-    iframe.id = 'send-iframe';
-    iframe.name = 'send-iframe';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
+  try {
+    const res = await fetch(SCRIPT_URL + '?' + params.toString());
+    const data = await res.json();
+    console.log('送出成功', groupId, data);
+  } catch(e) {
+    console.warn('送出失敗', groupId, e.message);
   }
-  const form = document.createElement('form');
-  form.method = 'GET';
-  form.action = SCRIPT_URL;
-  form.target = 'send-iframe';
-  params.forEach((val, key) => {
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = key;
-    input.value = val;
-    form.appendChild(input);
-  });
-  document.body.appendChild(form);
-  form.submit();
-  document.body.removeChild(form);
 }
 
 // ── localStorage 備份與還原 ──
@@ -753,23 +738,19 @@ function hideConfirm() {
 }
 
 // ── 送出至 Google Sheets ──
-function submitAll() {
+async function submitAll() {
   hideConfirm();
   saveComment();
   document.getElementById('btn-submit').disabled = true;
   document.getElementById('btn-submit').textContent = '送出中...';
 
-  // 逐一送出所有評分
   const entries = Object.entries(scores);
-  entries.forEach(([groupId, score]) => {
-    sendToSheet(parseInt(groupId));
-  });
+  for (const [groupId] of entries) {
+    await sendToSheet(parseInt(groupId));
+  }
 
-  // 等 3 秒讓所有 iframe 請求完成後顯示完成
-  setTimeout(() => {
-    clearLocal();
-    showSuccess();
-  }, 3000);
+  clearLocal();
+  showSuccess();
 }
 
 function showSuccess() {
