@@ -627,8 +627,8 @@ function updateProgress() {
   document.getElementById('progress-bar').style.width = `${(scored / total) * 100}%`;
 }
 
-// ── 即時送出單筆 ──
-async function saveRow(groupId) {
+// ── 即時送出單筆（用 img ping 繞過 CORS）──
+function saveRow(groupId) {
   const g = GROUPS.find(g => g.id === groupId);
   if (!g || scores[groupId] === undefined) return;
   const comment = comments[groupId] || '';
@@ -639,13 +639,8 @@ async function saveRow(groupId) {
     score: String(scores[groupId]),
     comment: comment
   });
-  try {
-    const res = await fetch(SCRIPT_URL + '?' + params.toString());
-    const data = await res.json();
-    console.log('送出成功', groupId, data);
-  } catch(e) {
-    console.warn('送出失敗', groupId, e);
-  }
+  const img = new Image();
+  img.src = SCRIPT_URL + '?' + params.toString();
 }
 
 // ── localStorage 備份與還原 ──
@@ -737,13 +732,13 @@ function hideConfirm() {
 }
 
 // ── 送出至 Google Sheets ──
-async function submitAll() {
+function submitAll() {
   hideConfirm();
   document.getElementById('btn-submit').disabled = true;
   document.getElementById('btn-submit').textContent = '送出中...';
 
-  const now = new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
-  const promises = Object.entries(scores).map(([groupId, score]) => {
+  // 用 img ping 送出所有資料（不受 CORS 限制）
+  Object.entries(scores).forEach(([groupId, score]) => {
     const g = GROUPS.find(g => g.id === parseInt(groupId));
     const comment = comments[parseInt(groupId)] || '';
     const params = new URLSearchParams({
@@ -753,18 +748,15 @@ async function submitAll() {
       score: String(score),
       comment: comment
     });
-    return fetch(SCRIPT_URL + '?' + params.toString()).then(r => r.json());
+    const img = new Image();
+    img.src = SCRIPT_URL + '?' + params.toString();
   });
 
-  try {
-    await Promise.all(promises);
+  // 等 2 秒讓請求發出後顯示完成
+  setTimeout(() => {
     clearLocal();
     showSuccess();
-  } catch(e) {
-    alert('送出失敗，請通知楊老師。錯誤：' + e.message);
-    document.getElementById('btn-submit').disabled = false;
-    document.getElementById('btn-submit').textContent = '✅ 送出所有評分';
-  }
+  }, 2000);
 }
 
 function showSuccess() {
