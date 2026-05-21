@@ -82,7 +82,52 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
 .progress-bar { height: 4px; background: var(--blue); transition: width 0.3s; }
 
 /* ── 卡片區 ── */
-.card-viewport { padding: 24px 20px 40px; max-width: 1100px; margin: 0 auto; }
+/* ── 左右分欄佈局 ── */
+.scoring-layout {
+  display: flex;
+  height: calc(100vh - 52px);
+  overflow: hidden;
+}
+.nav-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 12px 8px;
+}
+.nav-sidebar-title {
+  font-size: 12px; font-weight: 500;
+  color: var(--text-faint); letter-spacing: 0.05em;
+  padding: 4px 8px 10px; text-transform: uppercase;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; border-radius: var(--radius-sm);
+  cursor: pointer; font-size: 13px; color: var(--text-muted);
+  margin-bottom: 2px; transition: background 0.1s;
+  line-height: 1.3;
+}
+.nav-item:hover { background: var(--bg); }
+.nav-item.active { background: var(--blue-bg); color: var(--blue); font-weight: 500; }
+.nav-item.scored { color: var(--green); }
+.nav-item.active.scored { background: var(--green-bg); color: var(--green); }
+.nav-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  flex-shrink: 0; background: var(--border);
+}
+.nav-item.scored .nav-dot { background: var(--green); }
+.nav-item.active .nav-dot { background: var(--blue); }
+.nav-item.active.scored .nav-dot { background: var(--green); }
+.nav-score {
+  margin-left: auto; font-size: 12px; font-weight: 700;
+  color: var(--blue); flex-shrink: 0;
+}
+.nav-item.scored .nav-score { color: var(--green); }
+.card-viewport {
+  flex: 1; overflow-y: auto;
+  padding: 20px 24px 40px;
+}
 
 .group-counter {
   text-align: center; font-size: 13px; color: var(--text-faint);
@@ -285,7 +330,6 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
     <div class="top-bar-left">評審：<strong id="judge-name-display"></strong></div>
     <div class="top-bar-right">
       <span class="progress-text" id="progress-text"></span>
-      <button class="overview-btn" onclick="openOverview()">總覽</button>
       <button class="btn-logout" onclick="logout()">離開</button>
     </div>
   </div>
@@ -293,10 +337,18 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
     <div class="progress-bar" id="progress-bar"></div>
   </div>
 
-  <div class="card-viewport">
-    <div class="group-counter">
-      第 <span id="current-num">1</span> 組 / 共 <span id="total-num">33</span> 組
+  <div class="scoring-layout">
+    <!-- 左側導航欄 -->
+    <div class="nav-sidebar" id="nav-sidebar">
+      <div class="nav-sidebar-title">題目列表</div>
+      <div id="nav-list"></div>
     </div>
+
+    <!-- 右側主內容 -->
+    <div class="card-viewport">
+      <div class="group-counter">
+        第 <span id="current-num">1</span> 組 / 共 <span id="total-num">33</span> 組
+      </div>
 
     <div class="scoring-card">
       <!-- 海報圖片 -->
@@ -342,17 +394,9 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
         </div>
         <button class="btn-submit" id="btn-submit" onclick="showConfirm()">✅ 送出所有評分</button>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- 總覽側欄 -->
-<div class="overlay" id="overlay" onclick="closeOverview()"></div>
-<div class="side-panel" id="side-panel">
-  <button class="panel-close" onclick="closeOverview()">關閉</button>
-  <h2>評分總覽</h2>
-  <div id="overview-list"></div>
-</div>
+    </div><!-- end card-viewport -->
+  </div><!-- end scoring-layout -->
+</div><!-- end scoring-screen -->
 
 <!-- 送出確認列 -->
 <div class="confirm-bar" id="confirm-bar">
@@ -456,6 +500,28 @@ function logout() {
   location.reload();
 }
 
+// ── 左側導航列 ──
+function renderNavList() {
+  const list = document.getElementById('nav-list');
+  if (!list) return;
+  list.innerHTML = GROUPS.map(g => {
+    const isActive = GROUPS[currentIndex].id === g.id;
+    const isScored = scores[g.id] !== undefined;
+    let cls = 'nav-item';
+    if (isActive) cls += ' active';
+    if (isScored) cls += ' scored';
+    const scoreLabel = isScored ? `<span class="nav-score">${scores[g.id]}</span>` : '';
+    const shortTitle = g.title.length > 13 ? g.title.slice(0,13)+'…' : g.title;
+    return `<div class="${cls}" onclick="jumpTo(${g.id - 1})">
+      <span class="nav-dot"></span>
+      <span style="flex:1">${g.id}. ${shortTitle}</span>
+      ${scoreLabel}
+    </div>`;
+  }).join('');
+  const activeEl = list.querySelector('.nav-item.active');
+  if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
+}
+
 // ── 渲染目前組別 ──
 function renderGroup() {
   const g = GROUPS[currentIndex];
@@ -506,6 +572,7 @@ function renderGroup() {
   document.getElementById('btn-submit').style.display = currentIndex === GROUPS.length - 1 ? 'block' : 'none';
 
   updateProgress();
+  renderNavList();
 }
 
 function selectScore(s) {
@@ -643,24 +710,7 @@ function updateZoom() {
 function zoomIn() { zoomLevel = Math.min(zoomLevel + 25, 300); updateZoom(); }
 function zoomOut() { zoomLevel = Math.max(zoomLevel - 25, 50); updateZoom(); }
 
-// ── 總覽 ──
-function openOverview() {
-  const list = document.getElementById('overview-list');
-  list.innerHTML = GROUPS.map(g => `
-    <div class="overview-item" onclick="jumpTo(${g.id - 1})">
-      <span class="overview-item-name">第${g.id}組 ${g.title !== '待填入' ? g.title : ''}</span>
-      <span class="overview-item-score ${scores[g.id] === undefined ? 'empty' : ''}">
-        ${scores[g.id] !== undefined ? scores[g.id] + ' 分' : '未評'}
-      </span>
-    </div>`).join('');
-  document.getElementById('overlay').classList.add('open');
-  document.getElementById('side-panel').classList.add('open');
-}
-
-function closeOverview() {
-  document.getElementById('overlay').classList.remove('open');
-  document.getElementById('side-panel').classList.remove('open');
-}
+// ── 跳至指定組別 ──
 
 function jumpTo(idx) {
   currentIndex = idx;
